@@ -3,6 +3,7 @@ import { UsuariosService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { AppService } from 'src/app.service';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     MongooseModule.forRoot(process.env.MONGO_URL!),
   ],
-  providers: [UsuariosService],
+  providers: [AppService],
+  controllers: [AppService],
 })
 export class UsersModule {}

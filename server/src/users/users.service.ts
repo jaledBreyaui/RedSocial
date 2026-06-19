@@ -9,6 +9,12 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
+  async getUsers() {
+    let users = await this.userModel.find().select('-password');
+    console.log(users);
+    return users;
+  }
+
   async createUser(dto: CreateUserDto) {
     const email = dto.email.trim().toLowerCase();
     const userExists = await this.userModel.exists({ email });

@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { hash } from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
@@ -10,12 +10,13 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async getUsers() {
-    let users = await this.userModel.find().select('-password');
-    console.log(users);
-    return users;
+    return this.userModel.find().select('-password');
   }
 
-  async createUser(dto: CreateUserDto) {
+  async createUser(
+    dto: CreateUserDto,
+    avatar?: Express.Multer.File,
+  ): Promise<void> {
     const email = dto.email.trim().toLowerCase();
     const userExists = await this.userModel.exists({ email });
 
@@ -23,33 +24,40 @@ export class UsersService {
       throw new ConflictException('El email ya está registrado');
     }
 
-    const hashedPassword = await hash(dto.password, 12);
+    const hashedPassword = await bcrypt.hash(dto.password, 12);
+    const avatarURL = avatar
+      ? `/uploads/avatars/${avatar.filename}`
+      : undefined;
 
-    try {
-      const user = await this.userModel.create({
-        ...dto,
-        email,
-        password: hashedPassword,
-      });
+    await this.userModel.create({
+      ...dto,
+      email,
+      password: hashedPassword,
+      avatarURL,
+    });
+  }
 
-      return {
-        id: user._id,
-        name: user.name,
-        lastName: user.lastName,
-        email: user.email,
-        avatarURL: user.avatarURL,
-      };
-    } catch (error: unknown) {
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'code' in error &&
-        error.code === 11000
-      ) {
-        throw new ConflictException('El email ya está registrado');
-      }
+  async login(email: string, password: string) {
+    const user = await this.userModel.findOne({
+      email: email.trim().toLowerCase(),
+    });
 
-      throw error;
+    if (!user) {
+      throw new ConflictException('Credenciales inválidas');
     }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new ConflictException('Credenciales inválidas');
+    }
+
+    return {
+      id: user._id,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      avatarURL: user.avatarURL,
+    };
   }
 }

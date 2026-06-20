@@ -1,0 +1,13 @@
+{
+  "files.eol": "\n",
+  "typescript.tsdk": "server/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["typescript"],
+  "eslint.workingDirectories": [
+    {
+      "directory": "server",
+      "changeProcessCWD": true
+    }
+  ]
+}

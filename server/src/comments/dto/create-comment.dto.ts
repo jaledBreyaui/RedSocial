@@ -1,5 +1,6 @@
 import { IsString, MaxLength, MinLength } from 'class-validator';
-export class CreatePostDto {
+
+export class CreateCommentDto {
   @IsString()
   @MaxLength(200)
   @MinLength(2)

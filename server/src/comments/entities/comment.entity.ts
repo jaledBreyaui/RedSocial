@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
-
+import { Post } from 'src/posts/entities/post.entity';
 @Schema()
-export class Post {
-  @Prop({ trim: true })
+export class Comment {
+  @Prop({ required: true, trim: true })
   content!: string;
 
   @Prop({
@@ -12,13 +12,14 @@ export class Post {
     ref: User.name,
     required: true,
   })
-  author!: string;
+  author!: Types.ObjectId;
 
-  @Prop({ required: false })
-  imageURL?: string;
-
-  @Prop({ default: Date.now })
-  createdAt!: Date;
+  @Prop({
+    type: Types.ObjectId,
+    ref: Post.name,
+    required: true,
+  })
+  post!: Types.ObjectId;
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: User.name }],
@@ -27,4 +28,4 @@ export class Post {
   likes!: Types.ObjectId[];
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+export const CommentSchema = SchemaFactory.createForClass(Comment);

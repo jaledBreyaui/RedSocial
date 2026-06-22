@@ -1,7 +1,15 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Post } from '../../models/post';
+import { UsersService } from '../../services/users';
 import { CrearPost } from '../crearpost/crearpost';
 
 @Component({
@@ -11,11 +19,23 @@ import { CrearPost } from '../crearpost/crearpost';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
+export class Navbar implements OnInit {
   @Output() postCreado = new EventEmitter<Post>();
   @ViewChild(CrearPost) crearPost!: CrearPost;
 
-  constructor(private readonly router: Router) {}
+  readonly isAdmin = signal(false);
+
+  constructor(
+    private readonly router: Router,
+    private readonly usersService: UsersService,
+  ) {}
+
+  ngOnInit(): void {
+    this.usersService.obtenerActual().subscribe({
+      next: (user) => this.isAdmin.set(user.role === 'admin'),
+      error: () => this.isAdmin.set(false),
+    });
+  }
 
   cerrarSesion(): void {
     localStorage.removeItem('accessToken');

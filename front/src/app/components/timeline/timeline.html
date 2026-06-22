@@ -1,5 +1,5 @@
 <main class="timeline-page">
-  <app-navbar (postCreado)="posts.update((actuales) => [$event, ...actuales])" />
+  <app-navbar (postCreado)="agregarPostCreado($event)" />
 
   <section class="feed" aria-labelledby="timeline-title">
     <header class="feed-header">
@@ -20,6 +20,7 @@
         <app-posts
           [post]="post"
           [currentUserId]="currentUserId()"
+          [currentUserRole]="currentUserRole()"
           (postDeleted)="postEliminado($event)"
         />
       }

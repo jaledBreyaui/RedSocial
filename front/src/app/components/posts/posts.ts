@@ -28,6 +28,7 @@ import { CrearComentario } from '../crearcomentario/crearcomentario';
 export class Posts implements OnInit {
   @Input({ required: true }) post!: Post;
   readonly currentUserId = input.required<string>();
+  readonly currentUserRole = input<'user' | 'admin'>('user');
   readonly navegable = input(true);
   @Output() commentCreated = new EventEmitter<Comment>();
   @Output() postDeleted = new EventEmitter<string>();
@@ -40,9 +41,10 @@ export class Posts implements OnInit {
   readonly actualizandoLike = signal(false);
   readonly eliminando = signal(false);
   readonly isOwnPost = computed(
-    () => this.post.author._id === this.currentUserId(),
+    () =>
+      this.post.author._id === this.currentUserId() ||
+      this.currentUserRole() === 'admin',
   );
-
   constructor(
     private readonly postsService: PostsService,
     private readonly commentsService: CommentsService,

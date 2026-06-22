@@ -17,6 +17,7 @@
       <app-posts
         [post]="selectedPost"
         [currentUserId]="currentUserId()"
+        [currentUserRole]="currentUserRole()"
         [navegable]="false"
         (commentCreated)="comentarioCreado($event)"
         (postDeleted)="postEliminado()"

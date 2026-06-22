@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,12 @@ export const routes: Routes = [
   {
     path: 'perfil',
     loadComponent: () => import('./components/profile/profile').then((m) => m.Profile),
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./components/admin-panel/admin-panel').then((m) => m.AdminPanel),
   },
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   { path: '**', redirectTo: 'inicio' },

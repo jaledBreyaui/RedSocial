@@ -11,6 +11,7 @@ import { Model, Types } from 'mongoose';
 import { Post } from './entities/post.entity';
 import { Comment } from '../comments/entities/comment.entity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @Injectable()
 export class PostsService {
@@ -106,7 +107,7 @@ export class PostsService {
     };
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: string, userId: string, userRole: UserRole) {
     const post = await this.postModel
       .findById(id)
       .select('+imagePublicId');
@@ -115,7 +116,10 @@ export class PostsService {
       throw new NotFoundException('Post no encontrado');
     }
 
-    if (post.author.toString() !== userId) {
+    const isOwner = post.author.toString() === userId;
+    const isAdmin = userRole === UserRole.ADMIN;
+
+    if (!isOwner && !isAdmin) {
       throw new ForbiddenException(
         'No tenés permiso para eliminar esta publicación',
       );

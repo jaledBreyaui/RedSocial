@@ -18,6 +18,7 @@ export class Timeline implements OnInit {
   readonly cargando = signal(true);
   readonly error = signal('');
   readonly currentUserId = signal('');
+  readonly currentUserRole = signal<'user' | 'admin'>('user');
 
   constructor(
     private postService: PostsService,
@@ -26,7 +27,10 @@ export class Timeline implements OnInit {
 
   ngOnInit(): void {
     this.usersService.obtenerActual().subscribe({
-      next: (user) => this.currentUserId.set(user._id),
+      next: (user) => {
+        this.currentUserId.set(user._id);
+        this.currentUserRole.set(user.role ?? 'user');
+      },
     });
 
     this.postService.obtenerTodos().subscribe({
@@ -47,5 +51,9 @@ export class Timeline implements OnInit {
 
   postEliminado(id: string): void {
     this.posts.update((posts) => posts.filter((post) => post._id !== id));
+  }
+
+  agregarPostCreado(post: Post): void {
+    this.posts.update((posts) => [post, ...posts]);
   }
 }

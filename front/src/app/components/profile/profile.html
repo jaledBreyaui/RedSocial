@@ -59,6 +59,7 @@
               <app-posts
                 [post]="profilePost.post"
                 [currentUserId]="currentUser._id"
+                [currentUserRole]="currentUser.role ?? 'user'"
                 (commentCreated)="comentarioCreado(profilePost, $event)"
                 (postDeleted)="postEliminado($event)"
               />

@@ -9,6 +9,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @Injectable()
 export class AuthService {
@@ -64,6 +65,7 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync({
       sub: user._id.toString(),
       email: user.email,
+      role: user.role ?? UserRole.USER,
     });
 
     return { accessToken };

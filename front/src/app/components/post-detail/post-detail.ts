@@ -21,6 +21,7 @@ export class PostDetail implements OnInit {
   readonly post = signal<Post | undefined>(undefined);
   readonly comments = signal<Comment[]>([]);
   readonly currentUserId = signal('');
+  readonly currentUserRole = signal<'user' | 'admin'>('user');
   readonly cargando = signal(true);
   readonly error = signal('');
 
@@ -34,7 +35,10 @@ export class PostDetail implements OnInit {
 
   ngOnInit(): void {
     this.usersService.obtenerActual().subscribe({
-      next: (user) => this.currentUserId.set(user._id),
+      next: (user) => {
+        this.currentUserId.set(user._id);
+        this.currentUserRole.set(user.role ?? 'user');
+      },
     });
 
     const postId = this.route.snapshot.paramMap.get('id');

@@ -75,6 +75,10 @@ export class PostsController {
     @Param('id') id: string,
     @Req() request: AuthenticatedRequest,
   ) {
-    return this.postsService.remove(id, request.user.sub);
+    return this.postsService.remove(
+      id,
+      request.user.sub,
+      request.user.role,
+    );
   }
 }

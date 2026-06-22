@@ -30,6 +30,13 @@
       <i class="pi pi-user" aria-hidden="true"></i>
       <span class="nav-label">Perfil</span>
     </a>
+
+    @if (isAdmin()) {
+      <a class="nav-item" routerLink="/admin" routerLinkActive="active">
+        <i class="pi pi-shield" aria-hidden="true"></i>
+        <span class="nav-label">Administración</span>
+      </a>
+    }
   </nav>
 
   <p-button

@@ -1,0 +1,103 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: #f5f3ff;
+  background: #080912;
+  font-family: Inter, Aptos, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.admin-page {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.admin-content {
+  width: min(650px, 100%);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 0.75rem 2rem;
+}
+
+.admin-content > header {
+  min-height: 82px;
+  padding: 1rem 0.75rem;
+}
+
+.admin-content > header p {
+  margin: 0 0 0.2rem;
+  color: #8b7cf6;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-content h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.65rem;
+  letter-spacing: -0.04em;
+}
+
+.empty-panel {
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+  align-content: center;
+  padding: 2rem;
+  border: 1px solid #2b2d3d;
+  border-radius: 20px;
+  background: #11131d;
+  text-align: center;
+}
+
+.empty-panel i {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1rem;
+  place-items: center;
+  border-radius: 15px;
+  color: #a398ff;
+  background: #292440;
+  font-size: 1.35rem;
+}
+
+.empty-panel h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.25rem;
+}
+
+.empty-panel p {
+  max-width: 360px;
+  margin: 0.6rem 0 0;
+  color: #8e8c9e;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+  .admin-page {
+    padding-left: 84px;
+  }
+
+  .admin-content {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .admin-page {
+    padding-left: 72px;
+  }
+
+  .admin-content {
+    padding-inline: 0.5rem;
+  }
+}

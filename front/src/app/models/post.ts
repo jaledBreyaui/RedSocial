@@ -6,6 +6,7 @@ export interface PostAuthor {
   lastName: string;
   email: string;
   avatarURL?: string;
+  role?: 'user' | 'admin';
 }
 
 export interface Post {

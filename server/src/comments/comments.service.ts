@@ -14,28 +14,31 @@ export class CommentsService {
 
   async create(
     createCommentDto: CreateCommentDto,
-    userId?: string,
-    postId?: string,
-  ): Promise<void> {
+    userId: string,
+    postId: string,
+  ) {
     if (createCommentDto.content.trim().length === 0) {
       throw new BadRequestException(
         'El contenido del comentario no puede estar vacío',
       );
     }
 
-    await this.commentModel.create({
-      ...createCommentDto,
+    const comment = await this.commentModel.create({
+      content: createCommentDto.content.trim(),
       author: userId,
       post: postId,
     });
+
+    return this.commentModel
+      .findById(comment._id)
+      .populate('author', '-password -avatarPublicId');
   }
 
-  findAll() {
-    return `This action returns all comments`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  findAll(postId: string) {
+    return this.commentModel
+      .find({ post: postId })
+      .sort({ createdAt: 1 })
+      .populate('author', '-password -avatarPublicId');
   }
 
   update(id: number, updateCommentDto: UpdateCommentDto) {

@@ -1,0 +1,21 @@
+<article class="comment">
+  <div class="avatar">
+    @if (avatarUrl) {
+      <img [src]="avatarUrl" [alt]="'Avatar de ' + comment().author.name" />
+    } @else {
+      <span>{{ initials }}</span>
+    }
+  </div>
+
+  <div class="comment-body">
+    <header>
+      <strong>{{ comment().author.name }} {{ comment().author.lastName }}</strong>
+      <span>{{ username }}</span>
+      @if (createdAtLabel) {
+        <span aria-hidden="true">·</span>
+        <time [attr.datetime]="comment().createdAt">{{ createdAtLabel }}</time>
+      }
+    </header>
+    <p>{{ comment().content }}</p>
+  </div>
+</article>

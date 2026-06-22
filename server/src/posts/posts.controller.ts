@@ -4,8 +4,10 @@ import {
   Post,
   Body,
   Param,
+  Patch,
   UseInterceptors,
   BadRequestException,
+  Delete,
   UploadedFile,
   UseGuards,
   Req,
@@ -60,8 +62,19 @@ export class PostsController {
     return this.postsService.findOne(id);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.postsService.remove(+id);
-  // }
+  @Patch(':id/like')
+  toggleLike(
+    @Param('id') id: string,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.postsService.toggleLike(id, request.user.sub);
+  }
+
+  @Delete(':id')
+  remove(
+    @Param('id') id: string,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.postsService.remove(id, request.user.sub);
+  }
 }

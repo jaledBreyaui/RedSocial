@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Post, PostDetail } from '../models/post';
+import { Post, PostDetail, ToggleLikeResponse } from '../models/post';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,33 @@ export class PostsService {
 
   obtenerPorId(id: string): Observable<PostDetail> {
     return this.http.get<PostDetail>(`${this.apiUrl}/${id}`, {
+      headers: this.obtenerHeaders(),
+    });
+  }
+
+  crear(content: string, image?: File): Observable<Post> {
+    const formData = new FormData();
+    formData.append('content', content);
+
+    if (image) {
+      formData.append('postImage', image);
+    }
+
+    return this.http.post<Post>(`${this.apiUrl}/create`, formData, {
+      headers: this.obtenerHeaders(),
+    });
+  }
+
+  toggleLike(id: string): Observable<ToggleLikeResponse> {
+    return this.http.patch<ToggleLikeResponse>(
+      `${this.apiUrl}/${id}/like`,
+      {},
+      { headers: this.obtenerHeaders() },
+    );
+  }
+
+  eliminar(id: string): Observable<{ deletedId: string }> {
+    return this.http.delete<{ deletedId: string }>(`${this.apiUrl}/${id}`, {
       headers: this.obtenerHeaders(),
     });
   }

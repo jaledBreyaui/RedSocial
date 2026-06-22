@@ -14,8 +14,9 @@ export const routes: Routes = [
     loadComponent: () => import('./components/timeline/timeline').then((m) => m.Timeline),
   },
   {
-    path: 'post',
-    loadComponent: () => import('./components/posts/posts').then((m) => m.Posts),
+    path: 'posts/:id',
+    loadComponent: () =>
+      import('./components/post-detail/post-detail').then((m) => m.PostDetail),
   },
   {
     path: 'perfil',

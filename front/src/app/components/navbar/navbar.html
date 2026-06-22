@@ -33,11 +33,11 @@
   </nav>
 
   <p-button
-    routerLink="/post"
     label="Publicar"
     icon="pi pi-plus"
     styleClass="post-button"
     ariaLabel="Crear una publicación"
+    (onClick)="abrirCrearPost()"
   />
 
   <button class="nav-item logout-button" type="button" (click)="cerrarSesion()">
@@ -45,3 +45,5 @@
     <span class="nav-label">Cerrar sesión</span>
   </button>
 </aside>
+
+<app-crearpost (postCreado)="postCreado.emit($event)" />

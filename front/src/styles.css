@@ -8,3 +8,66 @@ body {
 body {
   font-family: Inter, Aptos, 'Segoe UI', sans-serif;
 }
+
+.delete-confirm-dialog {
+  overflow: hidden !important;
+  border: 1px solid #343647 !important;
+  border-radius: 18px !important;
+  color: #f5f3ff !important;
+  background: #11131d !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55) !important;
+}
+
+.delete-confirm-dialog .p-dialog-header,
+.delete-confirm-dialog .p-dialog-content,
+.delete-confirm-dialog .p-dialog-footer {
+  color: #f5f3ff !important;
+  background: #11131d !important;
+}
+
+.delete-confirm-dialog .p-confirmdialog-icon {
+  display: none !important;
+}
+
+.delete-confirm-dialog .p-confirmdialog-message {
+  margin-left: 0 !important;
+  color: #aaa8b8 !important;
+}
+
+.delete-confirm-dialog .p-dialog-footer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  padding: 0.75rem 1.25rem 1.25rem !important;
+}
+
+.delete-confirm-dialog .p-button.p-confirmdialog-accept-button,
+.delete-confirm-dialog button.p-confirmdialog-accept-button {
+  border: 1px solid #6558e8 !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  background: #6558e8 !important;
+  box-shadow: none !important;
+}
+
+.delete-confirm-dialog .p-button.p-confirmdialog-reject-button,
+.delete-confirm-dialog button.p-confirmdialog-reject-button {
+  border: 1px solid #3b3d50 !important;
+  border-radius: 10px !important;
+  color: #d6d3e0 !important;
+  background: #1b1d29 !important;
+  box-shadow: none !important;
+}
+
+.delete-confirm-dialog .p-button.p-confirmdialog-accept-button:hover,
+.delete-confirm-dialog button.p-confirmdialog-accept-button:hover {
+  border-color: #7568ef !important;
+  background: #7568ef !important;
+}
+
+.delete-confirm-dialog .p-button.p-confirmdialog-reject-button:hover,
+.delete-confirm-dialog button.p-confirmdialog-reject-button:hover {
+  border-color: #4a4d61 !important;
+  background: #242633 !important;
+}

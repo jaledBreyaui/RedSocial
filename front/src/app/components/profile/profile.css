@@ -1,1 +1,257 @@
-/* Profile component styles. */
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: #f5f3ff;
+  background: #080912;
+  font-family: Inter, Aptos, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.profile-page {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.profile-feed {
+  width: min(650px, 100%);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 0.75rem 2rem;
+}
+
+.page-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  min-height: 82px;
+  padding: 1rem 0.75rem;
+  background: rgba(8, 9, 18, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.page-header p,
+.recent-section > header p {
+  margin: 0 0 0.2rem;
+  color: #8b7cf6;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-header h1,
+.recent-section h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.04em;
+}
+
+.page-header h1 {
+  font-size: 1.65rem;
+}
+
+.profile-state,
+.empty-state {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  border: 1px solid #242633;
+  border-radius: 16px;
+  color: #aaa8b8;
+  background: #11131d;
+}
+
+.error-state {
+  color: #ffaaa4;
+  background: #1b1116;
+}
+
+.identity {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding: 1.35rem;
+  border: 1px solid #2b2d3d;
+  border-radius: 20px;
+  background: #11131d;
+}
+
+.profile-avatar {
+  display: grid;
+  width: 88px;
+  height: 88px;
+  overflow: hidden;
+  place-items: center;
+  border: 2px solid #45405e;
+  border-radius: 50%;
+  color: #fff;
+  background: #6558e8;
+  font-size: 1.1rem;
+  font-weight: 850;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.identity-copy {
+  align-self: center;
+}
+
+.identity-copy h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.6rem;
+  letter-spacing: -0.035em;
+}
+
+.identity-copy p {
+  margin: 0.3rem 0 0;
+  color: #8e8c9e;
+  font-size: 0.82rem;
+}
+
+.user-data {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0.35rem 0 0;
+}
+
+.user-data div {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #2b2d3d;
+  border-radius: 12px;
+  background: #171824;
+}
+
+.user-data .wide {
+  grid-column: 1 / -1;
+}
+
+.user-data dt {
+  color: #777589;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.user-data dd {
+  margin: 0.3rem 0 0;
+  color: #e5e2ef;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.recent-section {
+  margin-top: 1rem;
+}
+
+.recent-section > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  padding: 1rem 0.75rem 0.75rem;
+}
+
+.recent-section h2 {
+  font-size: 1.3rem;
+}
+
+.recent-section > header > span {
+  color: #777589;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.profile-post {
+  margin-bottom: 0.75rem;
+}
+
+.comments {
+  overflow: hidden;
+  margin: -0.1rem 0.6rem 0;
+  border: 1px solid #242633;
+  border-top: 0;
+  border-radius: 0 0 16px 16px;
+  background: #0d0f18;
+}
+
+.comments > header {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid #242633;
+}
+
+.comments h3 {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.comments > header span {
+  color: #8b7cf6;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.no-comments {
+  margin: -0.1rem 0.6rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid #242633;
+  border-top: 0;
+  border-radius: 0 0 16px 16px;
+  color: #777589;
+  background: #0d0f18;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 1100px) {
+  .profile-page {
+    padding-left: 84px;
+  }
+
+  .profile-feed {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-page {
+    padding-left: 72px;
+  }
+
+  .profile-feed {
+    padding-inline: 0.5rem;
+  }
+
+  .identity {
+    padding: 1rem;
+  }
+
+  .profile-avatar {
+    width: 68px;
+    height: 68px;
+  }
+
+  .identity-copy h2 {
+    font-size: 1.3rem;
+  }
+
+  .user-data {
+    grid-template-columns: 1fr;
+  }
+
+  .user-data .wide {
+    grid-column: auto;
+  }
+}

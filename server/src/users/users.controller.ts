@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { type AuthenticatedRequest, AuthGuard } from '../auth/auth.guard';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -8,5 +9,11 @@ export class UsersController {
   @Get()
   getUsers() {
     return this.usersService.getUsers();
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard)
+  getCurrentUser(@Req() request: AuthenticatedRequest) {
+    return this.usersService.findPublicById(request.user.sub);
   }
 }

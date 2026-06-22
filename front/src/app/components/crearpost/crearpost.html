@@ -1,0 +1,82 @@
+<p-dialog
+  header="Crear publicación"
+  [visible]="visible()"
+  (visibleChange)="$event ? visible.set(true) : cerrar()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="!publicando()"
+  [closeOnEscape]="!publicando()"
+  [style]="{ width: 'min(620px, calc(100vw - 2rem))' }"
+  styleClass="create-post-dialog"
+>
+  <form [formGroup]="formulario" (ngSubmit)="publicar()" novalidate>
+    <div class="composer">
+      <div class="avatar">
+        @if (avatarUrl) {
+          <img [src]="avatarUrl" [alt]="'Avatar de ' + usuarioActual()?.name" />
+        } @else {
+          <span aria-hidden="true">{{ iniciales }}</span>
+        }
+      </div>
+
+      <div class="composer-body">
+        <textarea
+          pTextarea
+          formControlName="content"
+          rows="5"
+          maxlength="200"
+          placeholder="¿Qué está pasando?"
+          aria-label="Contenido de la publicación"
+        ></textarea>
+
+        @if (imagenPreview()) {
+          <div class="image-preview">
+            <img [src]="imagenPreview()" alt="Vista previa de la imagen seleccionada" />
+            <button type="button" (click)="quitarImagen()" aria-label="Quitar imagen">
+              <i class="pi pi-times" aria-hidden="true"></i>
+            </button>
+          </div>
+        }
+
+        @if (formulario.controls.content.touched && formulario.controls.content.invalid) {
+          <small class="field-error">Escribí entre 2 y 200 caracteres.</small>
+        }
+
+        @if (error()) {
+          <p class="submit-error" role="alert">{{ error() }}</p>
+        }
+
+        <footer>
+          <div class="post-tools">
+            <label for="post-image" class="image-button" aria-label="Agregar imagen">
+              <i class="pi pi-image" aria-hidden="true"></i>
+            </label>
+            <input
+              id="post-image"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              (change)="seleccionarImagen($event)"
+            />
+          </div>
+
+          <div class="submit-area">
+            <span
+              class="character-count"
+              [class.limit-close]="formulario.controls.content.value.length >= 180"
+            >
+              {{ formulario.controls.content.value.length }}/200
+            </span>
+            <p-button
+              type="submit"
+              label="Publicar"
+              styleClass="publish-button"
+              [loading]="publicando()"
+              [disabled]="formulario.invalid"
+            />
+          </div>
+        </footer>
+      </div>
+    </div>
+  </form>
+</p-dialog>

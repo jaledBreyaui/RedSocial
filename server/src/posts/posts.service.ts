@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 // import { UpdatePostDto } from './dto/update-post.dto';
 import { BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Post } from './entities/post.entity';
 import { Comment } from '../comments/entities/comment.entity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -40,10 +44,13 @@ export class PostsService {
         author: userId,
       });
 
-      return this.postModel
+      const createdPost = await this.postModel
         .findById(post._id)
         .select('-imagePublicId')
-        .populate('author', '-password -avatarPublicId');
+        .populate('author', '-password -avatarPublicId')
+        .lean();
+
+      return createdPost;
     } catch (error) {
       await this.cloudinaryService.deleteImage(uploadedImage?.publicId);
       throw error;
@@ -71,6 +78,57 @@ export class PostsService {
       .populate('author', '-password');
 
     return { post, comments };
+  }
+
+  async toggleLike(id: string, userId: string) {
+    const post = await this.postModel.findById(id);
+
+    if (!post) {
+      throw new NotFoundException('Post no encontrado');
+    }
+
+    const userObjectId = new Types.ObjectId(userId);
+    const likeIndex = post.likes.findIndex(
+      (likeId) => likeId.toString() === userId,
+    );
+    const liked = likeIndex === -1;
+
+    if (liked) {
+      post.likes.push(userObjectId);
+    } else {
+      post.likes.splice(likeIndex, 1);
+    }
+
+    await post.save();
+
+    return {
+      likes: post.likes.map((likeId) => likeId.toString()),
+    };
+  }
+
+  async remove(id: string, userId: string) {
+    const post = await this.postModel
+      .findById(id)
+      .select('+imagePublicId');
+
+    if (!post) {
+      throw new NotFoundException('Post no encontrado');
+    }
+
+    if (post.author.toString() !== userId) {
+      throw new ForbiddenException(
+        'No tenés permiso para eliminar esta publicación',
+      );
+    }
+
+    await Promise.all([
+      this.commentModel.deleteMany({ post: post._id }),
+      this.postModel.deleteOne({ _id: post._id }),
+    ]);
+
+    await this.cloudinaryService.deleteImage(post.imagePublicId);
+
+    return { deletedId: id };
   }
 
   // update(id: number, updatePostDto: UpdatePostDto) {

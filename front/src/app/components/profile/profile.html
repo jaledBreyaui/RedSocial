@@ -1,1 +1,85 @@
-<p>profile works!</p>
+<main class="profile-page">
+  <app-navbar />
+
+  <section class="profile-feed" aria-labelledby="profile-title">
+    <header class="page-header">
+      <p>Tu cuenta</p>
+      <h1 id="profile-title">Perfil</h1>
+    </header>
+
+    @if (cargando()) {
+      <p class="profile-state">Cargando perfil...</p>
+    } @else if (error()) {
+      <p class="profile-state error-state" role="alert">{{ error() }}</p>
+    } @else if (user(); as currentUser) {
+      <section class="identity">
+        <div class="profile-avatar">
+          @if (avatarUrl) {
+            <img [src]="avatarUrl" [alt]="'Foto de perfil de ' + currentUser.name" />
+          } @else {
+            <span>{{ initials }}</span>
+          }
+        </div>
+
+        <div class="identity-copy">
+          <h2>{{ currentUser.name }} {{ currentUser.lastName }}</h2>
+          <p>{{ username }}</p>
+        </div>
+
+        <dl class="user-data">
+          <div>
+            <dt>Nombre</dt>
+            <dd>{{ currentUser.name }}</dd>
+          </div>
+          <div>
+            <dt>Apellido</dt>
+            <dd>{{ currentUser.lastName }}</dd>
+          </div>
+          <div class="wide">
+            <dt>Correo electrónico</dt>
+            <dd>{{ currentUser.email }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="recent-section" aria-labelledby="recent-title">
+        <header>
+          <div>
+            <p>Actividad reciente</p>
+            <h2 id="recent-title">Tus últimas publicaciones</h2>
+          </div>
+          <span>{{ recentPosts().length }}/3</span>
+        </header>
+
+        @if (recentPosts().length === 0) {
+          <p class="empty-state">Todavía no publicaste nada.</p>
+        } @else {
+          @for (profilePost of recentPosts(); track profilePost.post._id) {
+            <section class="profile-post">
+              <app-posts
+                [post]="profilePost.post"
+                [currentUserId]="currentUser._id"
+                (commentCreated)="comentarioCreado(profilePost, $event)"
+                (postDeleted)="postEliminado($event)"
+              />
+
+              @if (profilePost.comments.length > 0) {
+                <div class="comments">
+                  <header>
+                    <h3>Comentarios</h3>
+                    <span>{{ profilePost.comments.length }}</span>
+                  </header>
+                  @for (comment of profilePost.comments; track comment._id) {
+                    <app-comment [comment]="comment" />
+                  }
+                </div>
+              } @else {
+                <p class="no-comments">Sin comentarios todavía.</p>
+              }
+            </section>
+          }
+        }
+      </section>
+    }
+  </section>
+</main>

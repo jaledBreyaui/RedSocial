@@ -1,5 +1,5 @@
 <main class="timeline-page">
-  <app-navbar />
+  <app-navbar (postCreado)="posts.update((actuales) => [$event, ...actuales])" />
 
   <section class="feed" aria-labelledby="timeline-title">
     <header class="feed-header">
@@ -17,7 +17,11 @@
       <p class="timeline-state">Todavía no hay publicaciones.</p>
     } @else {
       @for (post of posts(); track post._id) {
-        <app-posts [post]="post" />
+        <app-posts
+          [post]="post"
+          [currentUserId]="currentUserId()"
+          (postDeleted)="postEliminado($event)"
+        />
       }
     }
   </section>

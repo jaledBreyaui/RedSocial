@@ -5,6 +5,7 @@ import { Navbar } from '../navbar/navbar';
 import { PostsService } from '../../services/posts';
 import { Post } from '../../models/post';
 import { Posts } from '../posts/posts';
+import { UsersService } from '../../services/users';
 @Component({
   selector: 'app-timeline',
   standalone: true,
@@ -16,10 +17,18 @@ export class Timeline implements OnInit {
   readonly posts = signal<Post[]>([]);
   readonly cargando = signal(true);
   readonly error = signal('');
+  readonly currentUserId = signal('');
 
-  constructor(private postService: PostsService) {}
+  constructor(
+    private postService: PostsService,
+    private usersService: UsersService,
+  ) {}
 
   ngOnInit(): void {
+    this.usersService.obtenerActual().subscribe({
+      next: (user) => this.currentUserId.set(user._id),
+    });
+
     this.postService.obtenerTodos().subscribe({
       next: (posts) => {
         this.posts.set(posts);
@@ -34,5 +43,9 @@ export class Timeline implements OnInit {
         );
       },
     });
+  }
+
+  postEliminado(id: string): void {
+    this.posts.update((posts) => posts.filter((post) => post._id !== id));
   }
 }

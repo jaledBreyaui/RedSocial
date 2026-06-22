@@ -1,0 +1,64 @@
+<p-dialog
+  header="Responder"
+  [visible]="visible()"
+  (visibleChange)="$event ? visible.set(true) : cerrar()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="!enviando()"
+  [closeOnEscape]="!enviando()"
+  [style]="{ width: 'min(620px, calc(100vw - 2rem))' }"
+  styleClass="reply-dialog"
+>
+  <p class="replying-to">
+    Estás respondiendo a <strong>{{ destinatario }}</strong>
+  </p>
+
+  <form [formGroup]="formulario" (ngSubmit)="responder()" novalidate>
+    <div class="composer">
+      <div class="avatar">
+        @if (avatarUrl) {
+          <img [src]="avatarUrl" [alt]="'Avatar de ' + usuarioActual()?.name" />
+        } @else {
+          <span aria-hidden="true">{{ iniciales }}</span>
+        }
+      </div>
+
+      <div class="composer-body">
+        <textarea
+          pTextarea
+          formControlName="content"
+          rows="5"
+          maxlength="200"
+          [placeholder]="'Respondé a ' + destinatario"
+          aria-label="Contenido del comentario"
+        ></textarea>
+
+        @if (formulario.controls.content.touched && formulario.controls.content.invalid) {
+          <small class="field-error">Escribí entre 2 y 200 caracteres.</small>
+        }
+
+        @if (error()) {
+          <p class="submit-error" role="alert">{{ error() }}</p>
+        }
+
+        <footer>
+          <span
+            class="character-count"
+            [class.limit-close]="formulario.controls.content.value.length >= 180"
+          >
+            {{ formulario.controls.content.value.length }}/200
+          </span>
+
+          <p-button
+            type="submit"
+            label="Responder"
+            styleClass="reply-button"
+            [loading]="enviando()"
+            [disabled]="formulario.invalid"
+          />
+        </footer>
+      </div>
+    </div>
+  </form>
+</p-dialog>

@@ -1,4 +1,11 @@
-<article class="post">
+<article
+  class="post"
+  [class.navigable]="navegable()"
+  [attr.tabindex]="navegable() ? 0 : null"
+  [attr.role]="navegable() ? 'link' : null"
+  (click)="abrirDetalle()"
+  (keydown.enter)="abrirDetalle()"
+>
   <div class="avatar" [class.has-image]="avatarUrl">
     @if (avatarUrl) {
       <img [src]="avatarUrl" [alt]="'Avatar de ' + post.author.name" />
@@ -23,9 +30,17 @@
         }
       </div>
 
-      <button type="button" class="more-button" aria-label="Más opciones">
-        <i class="pi pi-ellipsis-h" aria-hidden="true"></i>
-      </button>
+      @if (isOwnPost()) {
+        <button
+          type="button"
+          class="more-button delete-button"
+          [disabled]="eliminando()"
+          aria-label="Eliminar publicación"
+          (click)="eliminarPost($event)"
+        >
+          <i class="pi pi-trash" aria-hidden="true"></i>
+        </button>
+      }
     </header>
 
     <p class="post-content">{{ post.content }}</p>
@@ -39,20 +54,42 @@
     }
 
     <footer class="post-actions">
-      <button type="button" aria-label="Ver comentarios">
+      <button
+        type="button"
+        aria-label="Responder publicación"
+        (click)="detenerNavegacion($event); crearComentario.abrir()"
+      >
         <i class="pi pi-comment" aria-hidden="true"></i>
-        <span>Comentar</span>
+        @if (commentsCount() > 0) {
+          <span>{{ commentsCount() }}</span>
+        }
       </button>
 
-      <button type="button" aria-label="Me gusta">
-        <i class="pi pi-heart" aria-hidden="true"></i>
-        <span>{{ post.likes.length }}</span>
-      </button>
-
-      <button type="button" aria-label="Compartir publicación">
-        <i class="pi pi-send" aria-hidden="true"></i>
-        <span>Compartir</span>
+      <button
+        type="button"
+        class="like-button"
+        [class.liked]="liked()"
+        [disabled]="actualizandoLike()"
+        [attr.aria-label]="liked() ? 'Quitar me gusta' : 'Me gusta'"
+        [attr.aria-pressed]="liked()"
+        (click)="detenerNavegacion($event); toggleLike()"
+      >
+        <i
+          class="pi"
+          [class.pi-heart]="!liked()"
+          [class.pi-heart-fill]="liked()"
+          aria-hidden="true"
+        ></i>
+        <span>{{ likesCount() }}</span>
       </button>
     </footer>
   </div>
 </article>
+
+<app-crearcomentario
+  #crearComentario
+  [post]="post"
+  (comentarioCreado)="comentarioCreado($event)"
+/>
+
+<p-confirmdialog styleClass="delete-confirm-dialog" />

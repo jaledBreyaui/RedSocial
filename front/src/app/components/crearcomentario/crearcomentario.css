@@ -1,0 +1,164 @@
+:host {
+  display: contents;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .reply-dialog {
+  overflow: hidden;
+  border: 1px solid #343647;
+  border-radius: 20px;
+  color: #f5f3ff;
+  background: #11131d;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+}
+
+:host ::ng-deep .reply-dialog .p-dialog-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #242633;
+  color: #f5f3ff;
+  background: #11131d;
+}
+
+:host ::ng-deep .reply-dialog .p-dialog-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.15rem;
+}
+
+:host ::ng-deep .reply-dialog .p-dialog-header-close {
+  color: #aaa8b8;
+}
+
+:host ::ng-deep .reply-dialog .p-dialog-content {
+  padding: 1.1rem 1.25rem 1.25rem;
+  color: #f5f3ff;
+  background: #11131d;
+}
+
+.replying-to {
+  margin: 0 0 1rem 3.7rem;
+  color: #8e8c9e;
+  font-size: 0.76rem;
+}
+
+.replying-to strong {
+  color: #a398ff;
+}
+
+.composer {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.avatar {
+  display: grid;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #6558e8;
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.composer-body {
+  min-width: 0;
+  flex: 1;
+}
+
+textarea {
+  width: 100%;
+  min-height: 130px;
+  padding: 0.35rem 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  color: #f5f3ff;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  box-shadow: none;
+}
+
+textarea::placeholder {
+  color: #777589;
+}
+
+.field-error,
+.submit-error {
+  color: #ff938b;
+  font-size: 0.72rem;
+}
+
+.submit-error {
+  margin: 0.75rem 0 0;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid #2b2d3d;
+}
+
+.character-count {
+  color: #777589;
+  font-size: 0.68rem;
+}
+
+.character-count.limit-close {
+  color: #ff938b;
+}
+
+:host ::ng-deep .reply-button {
+  height: 40px;
+  padding-inline: 1.2rem;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: #6558e8;
+  font-weight: 800;
+}
+
+:host ::ng-deep .reply-button:not(:disabled):hover {
+  background: #7568ef;
+}
+
+@media (max-width: 520px) {
+  :host ::ng-deep .reply-dialog .p-dialog-content {
+    padding: 1rem;
+  }
+
+  .replying-to {
+    margin-left: 3rem;
+  }
+
+  .composer {
+    gap: 0.7rem;
+  }
+
+  .avatar {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+  }
+
+  textarea {
+    font-size: 1.05rem;
+  }
+}

@@ -1,17 +1,26 @@
 :host {
   display: block;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.4rem;
 }
 
 .post {
   display: flex;
   gap: 0.9rem;
-  padding: 1.4rem 1.5rem;
+  padding: 1rem 1.15rem 0.35rem;
   border: 1px solid #242633;
   border-radius: 18px;
   color: #f5f3ff;
   background: #11131d;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+.post.navigable {
+  cursor: pointer;
+}
+
+.post.navigable:focus-visible {
+  outline: 2px solid #8b7cf6;
+  outline-offset: 2px;
 }
 
 .avatar {
@@ -89,6 +98,16 @@
   background: #181a26;
 }
 
+.delete-button:hover {
+  color: #ff938b;
+  background: #24171c;
+}
+
+.delete-button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .post-content {
   margin: 0.4rem 0 0;
   color: #d6d3e0;
@@ -110,7 +129,7 @@
 
 .post-actions {
   display: flex;
-  max-width: 390px;
+  max-width: 220px;
   align-items: center;
   justify-content: space-between;
   margin-top: 1rem;
@@ -139,18 +158,27 @@
   background: #24171c;
 }
 
+.post-actions .like-button.liked {
+  color: #ff6f91;
+}
+
+.post-actions .like-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .post-actions i {
   font-size: 0.95rem;
 }
 
 @media (max-width: 520px) {
   :host {
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.35rem;
   }
 
   .post {
     gap: 0.7rem;
-    padding: 1rem;
+    padding: 0.85rem 0.85rem 0.3rem;
     border-radius: 15px;
   }
 

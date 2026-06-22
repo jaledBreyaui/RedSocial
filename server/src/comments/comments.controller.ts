@@ -22,20 +22,18 @@ export class CommentsController {
   create(
     @Body() createCommentDto: CreateCommentDto,
     @Param('postId') postId: string,
-    @Req() request?: AuthenticatedRequest,
+    @Req() request: AuthenticatedRequest,
   ) {
-    const userId = request?.user.sub;
-    return this.commentsService.create(createCommentDto, userId, postId);
+    return this.commentsService.create(
+      createCommentDto,
+      request.user.sub,
+      postId,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
-  }
-
-  @Get()
-  findOne(@Param('postId') id: string) {
-    return this.commentsService.findOne(+id);
+  findAll(@Param('postId') postId: string) {
+    return this.commentsService.findAll(postId);
   }
 
   @Delete()

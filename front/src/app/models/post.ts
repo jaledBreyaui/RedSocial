@@ -1,3 +1,5 @@
+import type { Comment } from './comment';
+
 export interface PostAuthor {
   _id: string;
   name: string;
@@ -17,5 +19,9 @@ export interface Post {
 
 export interface PostDetail {
   post: Post;
-  comments: unknown[];
+  comments: Comment[];
+}
+
+export interface ToggleLikeResponse {
+  likes: string[];
 }

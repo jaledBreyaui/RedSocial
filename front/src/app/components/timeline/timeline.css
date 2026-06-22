@@ -35,7 +35,7 @@ input {
   min-height: 82px;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   padding: 1rem 0.75rem;
   background: rgba(8, 9, 18, 0.88);
   backdrop-filter: blur(18px);
@@ -386,7 +386,7 @@ input {
 
   .feed {
     width: 100%;
-    margin-left: 0;
+    margin: 0;
   }
 }
 
@@ -397,12 +397,6 @@ input {
 
   .feed {
     padding-inline: 0.5rem;
-  }
-
-  .feed-header,
-  .composer,
-  .post {
-    padding-inline: 1rem;
   }
 
   .composer {

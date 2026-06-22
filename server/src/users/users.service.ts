@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,5 +24,17 @@ export class UsersService {
 
   async create(userData: CreateUserData): Promise<void> {
     await this.userModel.create(userData);
+  }
+
+  async findPublicById(id: string) {
+    const user = await this.userModel
+      .findById(id)
+      .select('-password -avatarPublicId');
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return user;
   }
 }

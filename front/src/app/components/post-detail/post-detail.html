@@ -1,0 +1,43 @@
+<main class="detail-page">
+  <app-navbar />
+
+  <section class="detail-feed" aria-labelledby="detail-title">
+    <header class="detail-header">
+      <button type="button" (click)="volver()" aria-label="Volver al timeline">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      </button>
+      <h1 id="detail-title">Publicación</h1>
+    </header>
+
+    @if (cargando()) {
+      <p class="detail-state">Cargando publicación...</p>
+    } @else if (error()) {
+      <p class="detail-state error-state" role="alert">{{ error() }}</p>
+    } @else if (post(); as selectedPost) {
+      <app-posts
+        [post]="selectedPost"
+        [currentUserId]="currentUserId()"
+        [navegable]="false"
+        (commentCreated)="comentarioCreado($event)"
+        (postDeleted)="postEliminado()"
+      />
+
+      <section class="comments" aria-labelledby="comments-title">
+        <header>
+          <h2 id="comments-title">Respuestas</h2>
+          @if (comments().length > 0) {
+            <span>{{ comments().length }}</span>
+          }
+        </header>
+
+        @if (comments().length === 0) {
+          <p class="empty-comments">Todavía no hay respuestas.</p>
+        } @else {
+          @for (comment of comments(); track comment._id) {
+            <app-comment [comment]="comment" />
+          }
+        }
+      </section>
+    }
+  </section>
+</main>

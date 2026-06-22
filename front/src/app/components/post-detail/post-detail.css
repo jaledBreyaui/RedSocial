@@ -1,0 +1,131 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: #f5f3ff;
+  background: #080912;
+  font-family: Inter, Aptos, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.detail-page {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.detail-feed {
+  width: min(650px, 100%);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 0.75rem 2rem;
+}
+
+.detail-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.75rem;
+  background: rgba(8, 9, 18, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.detail-header button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 11px;
+  place-items: center;
+  color: #aaa8b8;
+  background: transparent;
+  cursor: pointer;
+}
+
+.detail-header button:hover {
+  color: #fff;
+  background: #181a26;
+}
+
+.detail-header h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.45rem;
+  letter-spacing: -0.035em;
+}
+
+.detail-state {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  border: 1px solid #242633;
+  border-radius: 16px;
+  color: #aaa8b8;
+  background: #11131d;
+}
+
+.error-state {
+  color: #ffaaa4;
+  background: #1b1116;
+}
+
+.comments {
+  overflow: hidden;
+  margin-top: 0.65rem;
+  border: 1px solid #242633;
+  border-radius: 18px;
+  background: #11131d;
+}
+
+.comments > header {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  border-bottom: 1px solid #242633;
+}
+
+.comments h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+}
+
+.comments > header span {
+  color: #8b7cf6;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.empty-comments {
+  margin: 0;
+  padding: 1.5rem 1.25rem;
+  color: #777589;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 1100px) {
+  .detail-page {
+    padding-left: 84px;
+  }
+
+  .detail-feed {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .detail-page {
+    padding-left: 72px;
+  }
+
+  .detail-feed {
+    padding-inline: 0.5rem;
+  }
+}

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
 import { Post } from 'src/posts/entities/post.entity';
-@Schema()
+@Schema({ timestamps: true })
 export class Comment {
   @Prop({ required: true, trim: true })
   content!: string;
@@ -26,6 +26,9 @@ export class Comment {
     default: [],
   })
   likes!: Types.ObjectId[];
+
+  createdAt!: Date;
+  updatedAt!: Date;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

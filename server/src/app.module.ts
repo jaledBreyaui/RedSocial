@@ -7,12 +7,14 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 const mongoLogger = new Logger('MongoDB');
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    CloudinaryModule,
     MongooseModule.forRoot(process.env.MONGO_URL!, {
       onConnectionCreate: (connection) => {
         connection.on('connected', () => {

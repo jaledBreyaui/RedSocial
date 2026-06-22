@@ -10,10 +10,8 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { diskStorage } from 'multer';
-import { extname, join } from 'node:path';
+import { memoryStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { randomUUID } from 'node:crypto';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { type AuthenticatedRequest, AuthGuard } from '../auth/auth.guard';
@@ -27,14 +25,7 @@ export class PostsController {
   @Post('create')
   @UseInterceptors(
     FileInterceptor('postImage', {
-      storage: diskStorage({
-        destination: join(process.cwd(), 'uploads', 'posts'),
-        filename: (_request, file, callback) => {
-          const extension = extname(file.originalname).toLowerCase();
-          const fileName = `${randomUUID()}${extension}`;
-          callback(null, fileName);
-        },
-      }),
+      storage: memoryStorage(),
       limits: {
         fileSize: 5 * 1024 * 1024,
       },

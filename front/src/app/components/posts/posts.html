@@ -1,0 +1,58 @@
+<article class="post">
+  <div class="avatar" [class.has-image]="avatarUrl">
+    @if (avatarUrl) {
+      <img [src]="avatarUrl" [alt]="'Avatar de ' + post.author.name" />
+    } @else {
+      <span>{{ authorInitials }}</span>
+    }
+  </div>
+
+  <div class="post-body">
+    <header class="post-header">
+      <div class="author-line">
+        <strong>{{ post.author.name }} {{ post.author.lastName }}</strong>
+        <span>{{ username }}</span>
+        @if (createdAtLabel) {
+          <span aria-hidden="true">·</span>
+          <time
+            [attr.datetime]="post.createdAt"
+            [attr.title]="createdAtExactLabel + ' hs'"
+          >
+            {{ createdAtLabel }}
+          </time>
+        }
+      </div>
+
+      <button type="button" class="more-button" aria-label="Más opciones">
+        <i class="pi pi-ellipsis-h" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <p class="post-content">{{ post.content }}</p>
+
+    @if (imageUrl) {
+      <img
+        class="post-image"
+        [src]="imageUrl"
+        [alt]="'Imagen publicada por ' + post.author.name"
+      />
+    }
+
+    <footer class="post-actions">
+      <button type="button" aria-label="Ver comentarios">
+        <i class="pi pi-comment" aria-hidden="true"></i>
+        <span>Comentar</span>
+      </button>
+
+      <button type="button" aria-label="Me gusta">
+        <i class="pi pi-heart" aria-hidden="true"></i>
+        <span>{{ post.likes.length }}</span>
+      </button>
+
+      <button type="button" aria-label="Compartir publicación">
+        <i class="pi pi-send" aria-hidden="true"></i>
+        <span>Compartir</span>
+      </button>
+    </footer>
+  </div>
+</article>

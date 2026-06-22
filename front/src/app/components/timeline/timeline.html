@@ -1,1 +1,24 @@
-<p>timeline works!</p>
+<main class="timeline-page">
+  <app-navbar />
+
+  <section class="feed" aria-labelledby="timeline-title">
+    <header class="feed-header">
+      <div>
+        <p>Tu comunidad</p>
+        <h1 id="timeline-title">Inicio</h1>
+      </div>
+    </header>
+
+    @if (cargando()) {
+      <p class="timeline-state">Cargando publicaciones...</p>
+    } @else if (error()) {
+      <p class="timeline-state error-state" role="alert">{{ error() }}</p>
+    } @else if (posts().length === 0) {
+      <p class="timeline-state">Todavía no hay publicaciones.</p>
+    } @else {
+      @for (post of posts(); track post._id) {
+        <app-posts [post]="post" />
+      }
+    }
+  </section>
+</main>

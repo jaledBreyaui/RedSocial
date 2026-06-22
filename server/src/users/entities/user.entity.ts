@@ -19,6 +19,9 @@ export class User {
   @Prop({ required: false, default: '' })
   avatarURL?: string;
 
+  @Prop({ required: false, default: '' })
+  avatarPublicId?: string;
+
   @Prop({ required: true })
   password!: string;
 }

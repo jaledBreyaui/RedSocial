@@ -4,6 +4,10 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 
+type CreateUserData = CreateUserDto & {
+  avatarPublicId?: string;
+};
+
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -18,7 +22,7 @@ export class UsersService {
     });
   }
 
-  async create(userData: CreateUserDto): Promise<void> {
+  async create(userData: CreateUserData): Promise<void> {
     await this.userModel.create(userData);
   }
 }

@@ -1,1 +1,47 @@
-<p>navbar works!</p>
+<aside class="sidebar" aria-label="Navegación principal">
+  <a class="brand" routerLink="/timeline" aria-label="NetSocial">
+    <span class="brand-mark" aria-hidden="true">
+      <span></span>
+      <span></span>
+    </span>
+    <span class="brand-name">NetSocial</span>
+  </a>
+
+  <nav class="main-nav">
+    <a
+      class="nav-item"
+      routerLink="/timeline"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="pi pi-home" aria-hidden="true"></i>
+      <span class="nav-label">Inicio</span>
+    </a>
+
+    <a class="nav-item" href="#notifications">
+      <span class="icon-with-badge">
+        <i class="pi pi-bell" aria-hidden="true"></i>
+        <span class="notification-dot"></span>
+      </span>
+      <span class="nav-label">Notificaciones</span>
+    </a>
+
+    <a class="nav-item" routerLink="/perfil" routerLinkActive="active">
+      <i class="pi pi-user" aria-hidden="true"></i>
+      <span class="nav-label">Perfil</span>
+    </a>
+  </nav>
+
+  <p-button
+    routerLink="/post"
+    label="Publicar"
+    icon="pi pi-plus"
+    styleClass="post-button"
+    ariaLabel="Crear una publicación"
+  />
+
+  <button class="nav-item logout-button" type="button" (click)="cerrarSesion()">
+    <i class="pi pi-sign-out" aria-hidden="true"></i>
+    <span class="nav-label">Cerrar sesión</span>
+  </button>
+</aside>

@@ -17,6 +17,9 @@ export class Post {
   @Prop({ required: false })
   imageURL?: string;
 
+  @Prop({ required: false })
+  imagePublicId?: string;
+
   @Prop({ default: Date.now })
   createdAt!: Date;
 

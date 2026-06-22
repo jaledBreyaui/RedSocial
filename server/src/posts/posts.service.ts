@@ -6,37 +6,63 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './entities/post.entity';
 import { Comment } from '../comments/entities/comment.entity';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private readonly postModel: Model<Post>,
     @InjectModel(Comment.name) private readonly commentModel: Model<Comment>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async create(
     createPostDto?: CreatePostDto,
     image?: Express.Multer.File,
     userId?: string,
-  ): Promise<void> {
-    if (!createPostDto && !image) {
+  ) {
+    if (!createPostDto?.content?.trim() && !image) {
       throw new BadRequestException(
         'Debe proporcionar contenido o una imagen para crear un post',
       );
     }
 
-    const imageURL = image ? `/uploads/posts/${image.filename}` : undefined;
-    await this.postModel.create({ ...createPostDto, imageURL, author: userId });
+    const uploadedImage = image
+      ? await this.cloudinaryService.uploadImage(image, 'posts')
+      : undefined;
+
+    try {
+      const post = await this.postModel.create({
+        ...createPostDto,
+        content: createPostDto?.content?.trim(),
+        imageURL: uploadedImage?.url,
+        imagePublicId: uploadedImage?.publicId,
+        author: userId,
+      });
+
+      return this.postModel
+        .findById(post._id)
+        .select('-imagePublicId')
+        .populate('author', '-password -avatarPublicId');
+    } catch (error) {
+      await this.cloudinaryService.deleteImage(uploadedImage?.publicId);
+      throw error;
+    }
   }
 
   getAll() {
-    return this.postModel.find().populate('author', '-password');
+    return this.postModel
+      .find()
+      .sort({ createdAt: -1 })
+      .select('-imagePublicId')
+      .populate('author', '-password -avatarPublicId');
   }
 
   async findOne(id: string) {
     const post = await this.postModel
       .findById(id)
-      .populate('author', '-password');
+      .select('-imagePublicId')
+      .populate('author', '-password -avatarPublicId');
     if (!post) {
       throw new NotFoundException('Post no encontrado');
     }

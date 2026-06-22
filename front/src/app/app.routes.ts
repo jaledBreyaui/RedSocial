@@ -3,11 +3,11 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'inicio',
-    loadComponent: () => import('./login/login').then((m) => m.Login),
+    loadComponent: () => import('./components/login/login').then((m) => m.Login),
   },
   {
     path: 'registro',
-    loadComponent: () => import('./register/register').then((m) => m.Register),
+    loadComponent: () => import('./components/register/register').then((m) => m.Register),
   },
   {
     path: 'timeline',
@@ -15,7 +15,11 @@ export const routes: Routes = [
   },
   {
     path: 'post',
-    loadComponent: () => import('./posts/posts').then((m) => m.Posts),
+    loadComponent: () => import('./components/posts/posts').then((m) => m.Posts),
+  },
+  {
+    path: 'perfil',
+    loadComponent: () => import('./components/profile/profile').then((m) => m.Profile),
   },
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   { path: '**', redirectTo: 'inicio' },

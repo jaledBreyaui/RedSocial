@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { StatsModule } from './stats/stats.module';
 
 const mongoLogger = new Logger('MongoDB');
 
@@ -30,6 +31,7 @@ const mongoLogger = new Logger('MongoDB');
     AuthModule,
     PostsModule,
     CommentsModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

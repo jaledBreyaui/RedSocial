@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of, tap } from 'rxjs';
@@ -17,7 +17,7 @@ export class CommentsService {
       .post<Comment>(
         `${this.apiUrl}/${postId}/comments`,
         { content },
-        { headers: this.obtenerHeaders() },
+        { withCredentials: true },
       )
       .pipe(
         tap(() => {
@@ -31,7 +31,7 @@ export class CommentsService {
       .put<Comment>(
         `${this.apiUrl}/${postId}/comments/${id}`,
         { content },
-        { headers: this.obtenerHeaders() },
+        { withCredentials: true },
       )
       .pipe(tap(() => this.limpiarCachePost(postId)));
   }
@@ -50,7 +50,7 @@ export class CommentsService {
 
     return this.http
       .get<PaginatedCommentsResponse>(`${this.apiUrl}/${postId}/comments`, {
-        headers: this.obtenerHeaders(),
+        withCredentials: true,
         params: {
           page,
           limit,
@@ -77,13 +77,5 @@ export class CommentsService {
     keys
       .filter((key) => key.startsWith(`${postId}:`))
       .forEach((key) => this.commentsCache.delete(key));
-  }
-
-  private obtenerHeaders(): HttpHeaders {
-    const token = localStorage.getItem('accessToken');
-
-    return token
-      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
-      : new HttpHeaders();
   }
 }

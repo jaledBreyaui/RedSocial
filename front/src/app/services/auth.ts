@@ -13,6 +13,18 @@ export class Auth {
   }
 
   login(email: string, password: string) {
-    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/login`, { email, password });
+    return this.http.post<{ ok: boolean }>(
+      `${this.apiUrl}/login`,
+      { email, password },
+      { withCredentials: true },
+    );
+  }
+
+  logout() {
+    return this.http.post<{ ok: boolean }>(
+      `${this.apiUrl}/logout`,
+      {},
+      { withCredentials: true },
+    );
   }
 }

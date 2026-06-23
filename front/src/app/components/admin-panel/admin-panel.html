@@ -226,7 +226,110 @@
           <i class="pi pi-chart-line" aria-hidden="true"></i>
         </header>
 
-        <div class="stats-placeholder" aria-hidden="true"></div>
+        <div class="stats-filters">
+          <label>
+            <span>Desde</span>
+            <input
+              type="date"
+              [value]="statsDesde()"
+              (change)="actualizarFechaDesde($event)"
+            />
+          </label>
+
+          <label>
+            <span>Hasta</span>
+            <input
+              type="date"
+              [value]="statsHasta()"
+              (change)="actualizarFechaHasta($event)"
+            />
+          </label>
+
+          <button
+            type="button"
+            class="apply-stats"
+            [disabled]="cargandoStats()"
+            (click)="cargarEstadisticas()"
+          >
+            {{ cargandoStats() ? 'Cargando...' : 'Aplicar' }}
+          </button>
+        </div>
+
+        @if (cargandoStats()) {
+          <p class="admin-state">Cargando estadisticas...</p>
+        }
+
+        <div class="charts-grid">
+          <article class="chart-panel">
+            <header>
+              <div>
+                <p>Publicaciones</p>
+                <h3>Por usuario</h3>
+              </div>
+              <span>Barras</span>
+            </header>
+
+            @if (postsByUserData(); as data) {
+              <div class="chart-frame">
+                <p-chart type="bar" [data]="data" [options]="chartOptions" />
+              </div>
+            } @else {
+              <p class="chart-empty">Sin datos para el rango elegido.</p>
+            }
+          </article>
+
+          <article class="chart-panel">
+            <header>
+              <div>
+                <p>Comentarios</p>
+                <h3>Por dia</h3>
+              </div>
+              <span>Lineas</span>
+            </header>
+
+            @if (commentsByDayData(); as data) {
+              <div class="chart-frame">
+                <p-chart type="line" [data]="data" [options]="chartOptions" />
+              </div>
+            } @else {
+              <p class="chart-empty">Sin datos para el rango elegido.</p>
+            }
+          </article>
+
+          <article class="chart-panel wide-chart">
+            <header>
+              <div>
+                <p>Publicaciones</p>
+                <h3>Comentarios por publicacion</h3>
+              </div>
+              <span>Barras</span>
+            </header>
+
+            @if (commentsByPostData(); as data) {
+              <div class="comments-post-layout">
+                <div class="chart-frame doughnut-frame">
+                  <p-chart
+                    type="bar"
+                    [data]="data"
+                    [options]="commentsByPostOptions"
+                  />
+                </div>
+
+                <div class="post-stats-list" aria-label="Comentarios por publicacion">
+                  @for (item of commentsByPostStats(); track item.postId; let index = $index) {
+                    <article>
+                      <span>{{ index + 1 }}</span>
+                      <p>{{ item.postTitle }}</p>
+                      <strong>{{ item.count }} comentarios</strong>
+                    </article>
+                  }
+                </div>
+              </div>
+            } @else {
+              <p class="chart-empty">Sin datos para el rango elegido.</p>
+            }
+          </article>
+        </div>
       </section>
     }
   </section>

@@ -9,6 +9,7 @@ import {
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Post } from '../../models/post';
+import { Auth } from '../../services/auth';
 import { UsersService } from '../../services/users';
 import { CrearPost } from '../crearpost/crearpost';
 
@@ -28,6 +29,7 @@ export class Navbar implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly usersService: UsersService,
+    private readonly authService: Auth,
   ) {}
 
   ngOnInit(): void {
@@ -38,8 +40,10 @@ export class Navbar implements OnInit {
   }
 
   cerrarSesion(): void {
-    localStorage.removeItem('accessToken');
-    void this.router.navigate(['/inicio']);
+    this.authService.logout().subscribe({
+      next: () => void this.router.navigate(['/inicio']),
+      error: () => void this.router.navigate(['/inicio']),
+    });
   }
 
   abrirCrearPost(): void {

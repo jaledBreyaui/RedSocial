@@ -42,8 +42,7 @@ export class Login {
     this.errorLogin = '';
 
     this.authService.login(correo, password).subscribe({
-      next: ({ accessToken }) => {
-        localStorage.setItem('accessToken', accessToken);
+      next: () => {
         void this.router.navigate(['/timeline']);
       },
       error: (error: HttpErrorResponse) => {

@@ -5,14 +5,19 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Response } from 'express';
 import { memoryStorage } from 'multer';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+
+const ACCESS_TOKEN_COOKIE = 'accessToken';
+const ACCESS_TOKEN_MAX_AGE = 24 * 60 * 60 * 1000;
 
 @Controller('auth')
 export class AuthController {
@@ -48,7 +53,32 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { accessToken } = await this.authService.login(dto);
+
+    response.cookie(ACCESS_TOKEN_COOKIE, accessToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+      maxAge: ACCESS_TOKEN_MAX_AGE,
+      path: '/',
+    });
+
+    return { ok: true };
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie(ACCESS_TOKEN_COOKIE, {
+      sameSite: 'lax',
+      secure: false,
+      path: '/',
+    });
+
+    return { ok: true };
   }
 }

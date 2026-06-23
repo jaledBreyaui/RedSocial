@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PostAuthor } from '../models/post';
@@ -13,19 +13,19 @@ export class UsersService {
 
   obtenerActual(): Observable<PostAuthor> {
     return this.http.get<PostAuthor>(`${this.apiUrl}/me`, {
-      headers: this.obtenerHeaders(),
+      withCredentials: true,
     });
   }
 
   obtenerTodos(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl, {
-      headers: this.obtenerHeaders(),
+      withCredentials: true,
     });
   }
 
   crearUsuario(user: FormData): Observable<User> {
     return this.http.post<User>(this.apiUrl, user, {
-      headers: this.obtenerHeaders(),
+      withCredentials: true,
     });
   }
 
@@ -33,15 +33,7 @@ export class UsersService {
     return this.http.patch<User>(
       `${this.apiUrl}/${id}/suspension`,
       { isSuspended },
-      { headers: this.obtenerHeaders() },
+      { withCredentials: true },
     );
-  }
-
-  private obtenerHeaders(): HttpHeaders {
-    const token = localStorage.getItem('accessToken');
-
-    return token
-      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
-      : new HttpHeaders();
   }
 }

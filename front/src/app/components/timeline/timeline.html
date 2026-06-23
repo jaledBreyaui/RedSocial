@@ -7,6 +7,28 @@
         <p>Tu comunidad</p>
         <h1 id="timeline-title">Inicio</h1>
       </div>
+
+      <button
+        type="button"
+        class="sort-button"
+        [class.active]="ordenActual() === 'likes'"
+        [disabled]="cargando()"
+        (click)="alternarOrden()"
+      >
+        <span class="sort-icon" aria-hidden="true">
+          <i
+            class="pi"
+            [class.pi-heart-fill]="ordenActual() === 'likes'"
+            [class.pi-clock]="ordenActual() === 'recent'"
+          ></i>
+        </span>
+        <span class="sort-copy">
+          <small>Orden</small>
+          <strong>
+            {{ ordenActual() === 'recent' ? 'Mas reciente' : 'Por likes' }}
+          </strong>
+        </span>
+      </button>
     </header>
 
     @if (cargando()) {
@@ -21,8 +43,27 @@
           [post]="post"
           [currentUserId]="currentUserId()"
           [currentUserRole]="currentUserRole()"
+          (postUpdated)="postActualizado($event)"
           (postDeleted)="postEliminado($event)"
         />
+      }
+
+      @if (errorCargaMas()) {
+        <p class="timeline-state error-state" role="alert">
+          {{ errorCargaMas() }}
+        </p>
+      }
+
+      @if (hayMasPosts()) {
+        <div class="load-more">
+          <button
+            type="button"
+            [disabled]="cargandoMas()"
+            (click)="cargarMasPosts()"
+          >
+            {{ cargandoMas() ? 'Cargando...' : 'Cargar más posteos' }}
+          </button>
+        </div>
       }
     }
   </section>

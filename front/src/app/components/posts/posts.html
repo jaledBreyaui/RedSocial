@@ -28,22 +28,71 @@
             {{ createdAtLabel }}
           </time>
         }
+        @if (editado()) {
+          <span aria-hidden="true">·</span>
+          <span>Editado</span>
+        }
       </div>
 
       @if (isOwnPost()) {
-        <button
-          type="button"
-          class="more-button delete-button"
-          [disabled]="eliminando()"
-          aria-label="Eliminar publicación"
-          (click)="eliminarPost($event)"
-        >
-          <i class="pi pi-trash" aria-hidden="true"></i>
-        </button>
+        <div class="post-owner-actions">
+          <p-menu
+            #postActionsMenu
+            styleClass="post-actions-menu"
+            [model]="accionesPost"
+            [popup]="true"
+            appendTo="body"
+          />
+
+          <button
+            type="button"
+            class="more-button actions-trigger"
+            [disabled]="eliminando() || guardandoEdicion()"
+            aria-label="Abrir opciones de publicacion"
+            aria-haspopup="menu"
+            (click)="detenerNavegacion($event); postActionsMenu.toggle($event)"
+          >
+            <i class="pi pi-ellipsis-h" aria-hidden="true"></i>
+          </button>
+        </div>
       }
     </header>
 
-    <p class="post-content">{{ post.content }}</p>
+    @if (editando()) {
+      <div class="edit-form" (click)="detenerNavegacion($event)">
+        <textarea
+          [(ngModel)]="contenidoEditado"
+          [disabled]="guardandoEdicion()"
+          maxlength="200"
+          rows="4"
+          aria-label="Contenido de la publicacion"
+        ></textarea>
+
+        @if (errorEdicion()) {
+          <p class="edit-error" role="alert">{{ errorEdicion() }}</p>
+        }
+
+        <div class="edit-actions">
+          <button
+            type="button"
+            [disabled]="guardandoEdicion()"
+            (click)="cancelarEdicion($event)"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="save-edit"
+            [disabled]="guardandoEdicion()"
+            (click)="guardarEdicion($event)"
+          >
+            {{ guardandoEdicion() ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    } @else {
+      <p class="post-content">{{ post.content }}</p>
+    }
 
     @if (imageUrl) {
       <img
@@ -56,7 +105,7 @@
     <footer class="post-actions">
       <button
         type="button"
-        aria-label="Responder publicación"
+        aria-label="Responder publicacion"
         (click)="detenerNavegacion($event); crearComentario.abrir()"
       >
         <i class="pi pi-comment" aria-hidden="true"></i>

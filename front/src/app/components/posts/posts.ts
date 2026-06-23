@@ -8,9 +8,11 @@ import {
   Output,
   signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MenuModule } from 'primeng/menu';
 import { Comment } from '../../models/comment';
 import { Post } from '../../models/post';
 import { CommentsService } from '../../services/comments';
@@ -20,7 +22,7 @@ import { CrearComentario } from '../crearcomentario/crearcomentario';
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [CrearComentario, ConfirmDialogModule],
+  imports: [CrearComentario, ConfirmDialogModule, FormsModule, MenuModule],
   providers: [ConfirmationService],
   templateUrl: './posts.html',
   styleUrl: './posts.css',
@@ -32,14 +34,20 @@ export class Posts implements OnInit {
   readonly navegable = input(true);
   @Output() commentCreated = new EventEmitter<Comment>();
   @Output() postDeleted = new EventEmitter<string>();
+  @Output() postUpdated = new EventEmitter<Post>();
 
   readonly likes = signal<string[]>([]);
   readonly liked = computed(() => this.likes().includes(this.currentUserId()));
   readonly likesCount = computed(() => this.likes().length);
   readonly comments = signal<Comment[]>([]);
-  readonly commentsCount = computed(() => this.comments().length);
+  readonly commentsTotal = signal(0);
+  readonly commentsCount = computed(() => this.commentsTotal());
   readonly actualizandoLike = signal(false);
   readonly eliminando = signal(false);
+  readonly editando = signal(false);
+  readonly guardandoEdicion = signal(false);
+  readonly errorEdicion = signal('');
+  contenidoEditado = '';
   readonly isOwnPost = computed(
     () =>
       this.post.author._id === this.currentUserId() ||
@@ -52,17 +60,100 @@ export class Posts implements OnInit {
     private readonly confirmationService: ConfirmationService,
   ) {}
 
+  get accionesPost(): MenuItem[] {
+    return [
+      {
+        label: 'Modificar',
+        icon: 'pi pi-pencil',
+        disabled: this.editando() || this.eliminando(),
+        command: () => this.iniciarEdicion(),
+      },
+      {
+        label: 'Eliminar',
+        icon: 'pi pi-trash',
+        disabled: this.eliminando() || this.guardandoEdicion(),
+        styleClass: 'danger-menu-item',
+        command: () => this.eliminarPost(),
+      },
+    ];
+  }
+
   ngOnInit(): void {
     this.likes.set(this.post.likes);
     this.commentsService.obtenerPorPost(this.post._id).subscribe({
-      next: (comments) => this.comments.set(comments),
-      error: () => this.comments.set([]),
+      next: (response) => {
+        this.comments.set(response.data);
+        this.commentsTotal.set(response.total);
+      },
+      error: () => {
+        this.comments.set([]);
+        this.commentsTotal.set(0);
+      },
     });
   }
 
   comentarioCreado(comment: Comment): void {
-    this.comments.update((comments) => [...comments, comment]);
+    this.comments.update((comments) => [comment, ...comments]);
+    this.commentsTotal.update((total) => total + 1);
     this.commentCreated.emit(comment);
+  }
+
+  iniciarEdicion(event?: Event): void {
+    if (event) {
+      this.detenerNavegacion(event);
+    }
+
+    if (!this.isOwnPost()) {
+      return;
+    }
+
+    this.contenidoEditado = this.post.content;
+    this.errorEdicion.set('');
+    this.editando.set(true);
+  }
+
+  cancelarEdicion(event: Event): void {
+    this.detenerNavegacion(event);
+
+    if (this.guardandoEdicion()) {
+      return;
+    }
+
+    this.contenidoEditado = '';
+    this.errorEdicion.set('');
+    this.editando.set(false);
+  }
+
+  guardarEdicion(event: Event): void {
+    this.detenerNavegacion(event);
+
+    const content = this.contenidoEditado.trim();
+
+    if (!content || content.length < 2) {
+      this.errorEdicion.set('El contenido debe tener al menos 2 caracteres.');
+      return;
+    }
+
+    if (content === this.post.content.trim()) {
+      this.editando.set(false);
+      return;
+    }
+
+    this.guardandoEdicion.set(true);
+    this.errorEdicion.set('');
+
+    this.postsService.actualizar(this.post._id, content).subscribe({
+      next: (post) => {
+        this.post = post;
+        this.postUpdated.emit(post);
+        this.editando.set(false);
+        this.guardandoEdicion.set(false);
+      },
+      error: () => {
+        this.errorEdicion.set('No pudimos editar la publicacion.');
+        this.guardandoEdicion.set(false);
+      },
+    });
   }
 
   abrirDetalle(): void {
@@ -74,8 +165,10 @@ export class Posts implements OnInit {
     event.stopPropagation();
   }
 
-  eliminarPost(event: Event): void {
-    this.detenerNavegacion(event);
+  eliminarPost(event?: Event): void {
+    if (event) {
+      this.detenerNavegacion(event);
+    }
 
     if (!this.isOwnPost() || this.eliminando()) {
       return;
@@ -179,5 +272,20 @@ export class Posts implements OnInit {
       timeStyle: 'short',
       timeZone: 'America/Argentina/Buenos_Aires',
     }).format(createdAt);
+  }
+
+  editado(): boolean {
+    if (!this.post.updatedAt) {
+      return false;
+    }
+
+    const createdAt = new Date(this.post.createdAt).getTime();
+    const updatedAt = new Date(this.post.updatedAt).getTime();
+
+    return (
+      !Number.isNaN(createdAt) &&
+      !Number.isNaN(updatedAt) &&
+      updatedAt - createdAt > 1000
+    );
   }
 }

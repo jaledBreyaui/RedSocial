@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
-// import { UpdatePostDto } from './dto/update-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -58,12 +58,60 @@ export class PostsService {
     }
   }
 
-  getAll() {
-    return this.postModel
-      .find()
-      .sort({ createdAt: -1 })
-      .select('-imagePublicId')
-      .populate('author', '-password -avatarPublicId');
+  async getAll(page: number, limit: number, order: string = 'recent') {
+    const minPage = Math.max(page, 1);
+    const maxPosts = Math.min(Math.max(limit, 1), 50);
+    const skip = (minPage - 1) * maxPosts;
+
+    if (order === 'likes') {
+      const [data, total] = await Promise.all([
+        this.postModel.aggregate([
+          {
+            $addFields: {
+              likesCount: { $size: { $ifNull: ['$likes', []] } },
+            },
+          },
+          { $sort: { likesCount: -1, createdAt: -1 } },
+          { $skip: skip },
+          { $limit: maxPosts },
+          { $project: { imagePublicId: 0, likesCount: 0 } },
+        ]),
+        this.postModel.countDocuments(),
+      ]);
+
+      await this.postModel.populate(data, {
+        path: 'author',
+        select: '-password -avatarPublicId',
+      });
+
+      return {
+        data,
+        page: minPage,
+        limit: maxPosts,
+        total,
+        hasMore: skip + data.length < total,
+      };
+    }
+
+    const [data, total] = await Promise.all([
+      this.postModel
+        .find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(maxPosts)
+        .select('-imagePublicId')
+        .populate('author', '-password -avatarPublicId')
+        .lean(),
+      this.postModel.countDocuments(),
+    ]);
+
+    return {
+      data,
+      page: minPage,
+      limit: maxPosts,
+      total,
+      hasMore: skip + data.length < total,
+    };
   }
 
   async findOne(id: string) {
@@ -74,11 +122,8 @@ export class PostsService {
     if (!post) {
       throw new NotFoundException('Post no encontrado');
     }
-    const comments = await this.commentModel
-      .find({ post: id })
-      .populate('author', '-password');
 
-    return { post, comments };
+    return { post };
   }
 
   async toggleLike(id: string, userId: string) {
@@ -108,9 +153,7 @@ export class PostsService {
   }
 
   async remove(id: string, userId: string, userRole: UserRole) {
-    const post = await this.postModel
-      .findById(id)
-      .select('+imagePublicId');
+    const post = await this.postModel.findById(id).select('+imagePublicId');
 
     if (!post) {
       throw new NotFoundException('Post no encontrado');
@@ -135,9 +178,42 @@ export class PostsService {
     return { deletedId: id };
   }
 
-  // update(id: number, updatePostDto: UpdatePostDto) {
-  //   return `This action updates a #${id} post`;
-  // }
+  async update(
+    id: string,
+    updatePostDto: UpdatePostDto,
+    userId: string,
+    userRole: UserRole,
+  ) {
+    const post = await this.postModel.findById(id);
+
+    if (!post) {
+      throw new NotFoundException('Post no encontrado');
+    }
+
+    const isOwner = post.author.toString() === userId;
+    const isAdmin = userRole === UserRole.ADMIN;
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException(
+        'No tenes permiso para editar esta publicacion',
+      );
+    }
+
+    const content = updatePostDto.content?.trim();
+
+    if (!content) {
+      throw new BadRequestException('El contenido no puede estar vacio');
+    }
+
+    post.content = content;
+    await post.save();
+
+    return this.postModel
+      .findById(post._id)
+      .select('-imagePublicId')
+      .populate('author', '-password -avatarPublicId')
+      .lean();
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} post`;

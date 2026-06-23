@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Post {
   @Prop({ trim: true })
   content!: string;
@@ -22,6 +22,8 @@ export class Post {
 
   @Prop({ default: Date.now })
   createdAt!: Date;
+
+  updatedAt!: Date;
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: User.name }],

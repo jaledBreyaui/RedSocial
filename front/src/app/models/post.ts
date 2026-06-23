@@ -15,12 +15,21 @@ export interface Post {
   author: PostAuthor;
   imageURL?: string;
   createdAt: string;
+  updatedAt?: string;
   likes: string[];
 }
 
 export interface PostDetail {
   post: Post;
-  comments: Comment[];
+  comments?: Comment[];
+}
+
+export interface PaginatedPostsResponse {
+  data: Post[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
 }
 
 export interface ToggleLikeResponse {

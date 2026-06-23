@@ -2,15 +2,232 @@
   <app-navbar />
 
   <section class="admin-content" aria-labelledby="admin-title">
-    <header>
-      <p>NetSocial</p>
-      <h1 id="admin-title">Panel de administración</h1>
+    <header class="page-header">
+      <div>
+        <p>NetSocial</p>
+        <h1 id="admin-title">Panel de administracion</h1>
+      </div>
+
+      <div class="admin-summary" aria-label="Resumen de usuarios">
+        <article>
+          <span>Total</span>
+          <strong>{{ totalUsuarios() }}</strong>
+        </article>
+        <article>
+          <span>Admins</span>
+          <strong>{{ totalAdmins() }}</strong>
+        </article>
+        <article class="danger">
+          <span>Suspendidos</span>
+          <strong>{{ totalSuspendidos() }}</strong>
+        </article>
+      </div>
     </header>
 
-    <div class="empty-panel">
-      <i class="pi pi-shield" aria-hidden="true"></i>
-      <h2>Administración</h2>
-      <p>Este espacio está listo para incorporar herramientas administrativas.</p>
-    </div>
+    @if (error()) {
+      <p class="admin-state error-state" role="alert">{{ error() }}</p>
+    }
+
+    @if (mensaje()) {
+      <p class="admin-state success-state">{{ mensaje() }}</p>
+    }
+
+    <nav class="admin-tabs" aria-label="Secciones del panel">
+      <button
+        type="button"
+        [class.active]="tabActiva() === 'usuarios'"
+        (click)="seleccionarTab('usuarios')"
+      >
+        <i class="pi pi-users" aria-hidden="true"></i>
+        Usuarios
+      </button>
+      <button
+        type="button"
+        [class.active]="tabActiva() === 'estadisticas'"
+        (click)="seleccionarTab('estadisticas')"
+      >
+        <i class="pi pi-chart-line" aria-hidden="true"></i>
+        Estadisticas
+      </button>
+    </nav>
+
+    @if (tabActiva() === 'usuarios') {
+      <section class="admin-card create-card" aria-labelledby="create-user-title">
+        <header>
+          <div>
+            <p>Usuarios</p>
+            <h2 id="create-user-title">Crear usuario</h2>
+          </div>
+          <i class="pi pi-user-plus" aria-hidden="true"></i>
+        </header>
+
+        <form [formGroup]="formulario" (ngSubmit)="crearUsuario()">
+          <div class="form-grid">
+            <label>
+              <span>Nombre</span>
+              <input pInputText type="text" formControlName="name" />
+            </label>
+
+            <label>
+              <span>Apellido</span>
+              <input pInputText type="text" formControlName="lastName" />
+            </label>
+
+            <label class="wide">
+              <span>Email</span>
+              <input pInputText type="email" formControlName="email" />
+            </label>
+
+            <label class="wide">
+              <span>Password</span>
+              <input pInputText type="password" formControlName="password" />
+            </label>
+          </div>
+
+          <div class="avatar-field">
+            <div class="avatar-preview">
+              @if (avatarPreview()) {
+                <img [src]="avatarPreview()" alt="Vista previa del avatar" />
+              } @else {
+                <i class="pi pi-user" aria-hidden="true"></i>
+              }
+            </div>
+
+            <div class="avatar-actions">
+              <span>Foto de perfil</span>
+              <div>
+                <input
+                  #avatarInput
+                  id="admin-avatar"
+                  type="file"
+                  accept="image/*"
+                  (change)="seleccionarAvatar($event)"
+                />
+                <label for="admin-avatar" class="avatar-upload">
+                  Seleccionar foto
+                </label>
+                @if (avatarPreview()) {
+                  <button
+                    type="button"
+                    class="avatar-remove"
+                    (click)="quitarAvatar(avatarInput)"
+                  >
+                    Quitar
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <fieldset class="role-options">
+            <legend>Rol</legend>
+
+            <label>
+              <p-radiobutton
+                inputId="role-user"
+                value="user"
+                formControlName="role"
+              />
+              <span>Usuario</span>
+            </label>
+
+            <label>
+              <p-radiobutton
+                inputId="role-admin"
+                value="admin"
+                formControlName="role"
+              />
+              <span>Admin</span>
+            </label>
+          </fieldset>
+
+          <button
+            pButton
+            type="submit"
+            class="submit-button"
+            [disabled]="creando()"
+          >
+            {{ creando() ? 'Creando...' : 'Crear usuario' }}
+          </button>
+        </form>
+      </section>
+
+      <section class="admin-card" aria-labelledby="users-title">
+        <header>
+          <div>
+            <p>Gestion</p>
+            <h2 id="users-title">Usuarios</h2>
+          </div>
+          <span>{{ totalUsuarios() }}</span>
+        </header>
+
+        @if (cargando()) {
+          <p class="admin-state">Cargando usuarios...</p>
+        } @else if (usuarios().length === 0) {
+          <p class="admin-state">Todavia no hay usuarios.</p>
+        } @else {
+          <div class="users-list">
+            @for (user of usuarios(); track user._id) {
+              <article class="user-row" [class.suspended]="user.isSuspended">
+                <div class="user-main">
+                  <div class="avatar">
+                    @if (user.avatarURL) {
+                      <img [src]="user.avatarURL" [alt]="'Avatar de ' + user.name" />
+                    } @else {
+                      <span>
+                        {{ user.name.charAt(0) }}{{ user.lastName.charAt(0) }}
+                      </span>
+                    }
+                  </div>
+
+                  <div>
+                    <h3>{{ user.name }} {{ user.lastName }}</h3>
+                    <p>{{ user.email }}</p>
+                  </div>
+                </div>
+
+                <div class="user-meta">
+                  <p-tag
+                    [value]="user.role === 'admin' ? 'Admin' : 'Usuario'"
+                    [severity]="user.role === 'admin' ? 'info' : 'secondary'"
+                  />
+                  @if (user.isSuspended) {
+                    <p-tag value="Suspendido" severity="danger" />
+                  }
+                </div>
+
+                <button
+                  type="button"
+                  class="suspend-button"
+                  [class.reactivate]="user.isSuspended"
+                  [disabled]="actualizandoUsuarioId() === user._id"
+                  (click)="alternarSuspension(user)"
+                >
+                  {{
+                    actualizandoUsuarioId() === user._id
+                      ? 'Actualizando...'
+                      : user.isSuspended
+                        ? 'Reactivar'
+                        : 'Suspender'
+                  }}
+                </button>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    } @else {
+      <section class="admin-card stats-card" aria-labelledby="stats-title">
+        <header>
+          <div>
+            <p>Metricas</p>
+            <h2 id="stats-title">Estadisticas</h2>
+          </div>
+          <i class="pi pi-chart-line" aria-hidden="true"></i>
+        </header>
+
+        <div class="stats-placeholder" aria-hidden="true"></div>
+      </section>
+    }
   </section>
 </main>

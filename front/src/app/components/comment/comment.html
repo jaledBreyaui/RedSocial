@@ -9,13 +9,66 @@
 
   <div class="comment-body">
     <header>
-      <strong>{{ comment().author.name }} {{ comment().author.lastName }}</strong>
-      <span>{{ username }}</span>
-      @if (createdAtLabel) {
-        <span aria-hidden="true">·</span>
-        <time [attr.datetime]="comment().createdAt">{{ createdAtLabel }}</time>
+      <div class="comment-meta">
+        <strong>{{ comment().author.name }} {{ comment().author.lastName }}</strong>
+        <span>{{ username }}</span>
+        @if (createdAtLabel) {
+          <span aria-hidden="true">·</span>
+          <time [attr.datetime]="comment().createdAt">{{ createdAtLabel }}</time>
+        }
+        @if (editado()) {
+          <span aria-hidden="true">·</span>
+          <span>Editado</span>
+        }
+      </div>
+
+      @if (isOwnComment) {
+        <button
+          type="button"
+          class="edit-comment"
+          [disabled]="editando() || guardandoEdicion()"
+          aria-label="Editar comentario"
+          (click)="iniciarEdicion()"
+        >
+          <i class="pi pi-pencil" aria-hidden="true"></i>
+        </button>
       }
     </header>
-    <p>{{ comment().content }}</p>
+
+    @if (editando()) {
+      <div class="edit-form">
+        <textarea
+          [(ngModel)]="contenidoEditado"
+          [disabled]="guardandoEdicion()"
+          maxlength="200"
+          rows="3"
+          aria-label="Contenido del comentario"
+        ></textarea>
+
+        @if (errorEdicion()) {
+          <p class="edit-error" role="alert">{{ errorEdicion() }}</p>
+        }
+
+        <div class="edit-actions">
+          <button
+            type="button"
+            [disabled]="guardandoEdicion()"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="save-edit"
+            [disabled]="guardandoEdicion()"
+            (click)="guardarEdicion()"
+          >
+            {{ guardandoEdicion() ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    } @else {
+      <p>{{ comment().content }}</p>
+    }
   </div>
 </article>

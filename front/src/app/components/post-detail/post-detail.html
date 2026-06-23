@@ -20,14 +20,15 @@
         [currentUserRole]="currentUserRole()"
         [navegable]="false"
         (commentCreated)="comentarioCreado($event)"
+        (postUpdated)="postActualizado($event)"
         (postDeleted)="postEliminado()"
       />
 
       <section class="comments" aria-labelledby="comments-title">
         <header>
           <h2 id="comments-title">Respuestas</h2>
-          @if (comments().length > 0) {
-            <span>{{ comments().length }}</span>
+          @if (commentsTotal() > 0) {
+            <span>{{ commentsTotal() }}</span>
           }
         </header>
 
@@ -35,8 +36,30 @@
           <p class="empty-comments">Todavía no hay respuestas.</p>
         } @else {
           @for (comment of comments(); track comment._id) {
-            <app-comment [comment]="comment" />
+            <app-comment
+              [comment]="comment"
+              [currentUserId]="currentUserId()"
+              (commentUpdated)="comentarioActualizado($event)"
+            />
           }
+        }
+
+        @if (errorCargaMas()) {
+          <p class="empty-comments error-text" role="alert">
+            {{ errorCargaMas() }}
+          </p>
+        }
+
+        @if (hayMasComments()) {
+          <div class="load-more">
+            <button
+              type="button"
+              [disabled]="cargandoMas()"
+              (click)="cargarMasComments()"
+            >
+              {{ cargandoMas() ? 'Cargando...' : 'Cargar más respuestas' }}
+            </button>
+          </div>
         }
       </section>
     }

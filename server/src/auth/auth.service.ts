@@ -56,6 +56,10 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    if (user.isSuspended) {
+      throw new UnauthorizedException('Usuario suspendido');
+    }
+
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
 
     if (!passwordMatches) {

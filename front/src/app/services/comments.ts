@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of, tap } from 'rxjs';
-import { Comment } from '../models/comment';
+import { Comment, PaginatedCommentsResponse } from '../models/comment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ import { Comment } from '../models/comment';
 export class CommentsService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:3000/posts';
-  private readonly commentsCache = new Map<string, Comment[]>();
+  private readonly commentsCache = new Map<string, PaginatedCommentsResponse>();
 
   crear(postId: string, content: string): Observable<Comment> {
     return this.http
@@ -20,33 +20,63 @@ export class CommentsService {
         { headers: this.obtenerHeaders() },
       )
       .pipe(
-        tap((comment) => {
-          const comments = this.commentsCache.get(postId) ?? [];
-          this.commentsCache.set(postId, [...comments, comment]);
+        tap(() => {
+          this.limpiarCachePost(postId);
         }),
       );
   }
 
-  obtenerPorPost(postId: string): Observable<Comment[]> {
-    const cachedComments = this.commentsCache.get(postId);
+  actualizar(postId: string, id: string, content: string): Observable<Comment> {
+    return this.http
+      .put<Comment>(
+        `${this.apiUrl}/${postId}/comments/${id}`,
+        { content },
+        { headers: this.obtenerHeaders() },
+      )
+      .pipe(tap(() => this.limpiarCachePost(postId)));
+  }
+
+  obtenerPorPost(
+    postId: string,
+    page = 1,
+    limit = 10,
+  ): Observable<PaginatedCommentsResponse> {
+    const cacheKey = this.obtenerCacheKey(postId, page, limit);
+    const cachedComments = this.commentsCache.get(cacheKey);
 
     if (cachedComments) {
       return of(cachedComments);
     }
 
     return this.http
-      .get<Comment[]>(`${this.apiUrl}/${postId}/comments`, {
+      .get<PaginatedCommentsResponse>(`${this.apiUrl}/${postId}/comments`, {
         headers: this.obtenerHeaders(),
+        params: {
+          page,
+          limit,
+        },
       })
-      .pipe(
-        tap((comments) => {
-          this.commentsCache.set(postId, comments);
-        }),
-      );
+      .pipe(tap((comments) => this.commentsCache.set(cacheKey, comments)));
   }
 
-  guardarEnCache(postId: string, comments: Comment[]): void {
-    this.commentsCache.set(postId, comments);
+  guardarEnCache(
+    postId: string,
+    comments: PaginatedCommentsResponse,
+    page = 1,
+    limit = 10,
+  ): void {
+    this.commentsCache.set(this.obtenerCacheKey(postId, page, limit), comments);
+  }
+
+  private obtenerCacheKey(postId: string, page = 1, limit = 10): string {
+    return `${postId}:${page}:${limit}`;
+  }
+
+  private limpiarCachePost(postId: string): void {
+    const keys = Array.from(this.commentsCache.keys());
+    keys
+      .filter((key) => key.startsWith(`${postId}:`))
+      .forEach((key) => this.commentsCache.delete(key));
   }
 
   private obtenerHeaders(): HttpHeaders {

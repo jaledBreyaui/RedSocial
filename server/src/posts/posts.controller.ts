@@ -8,14 +8,17 @@ import {
   UseInterceptors,
   BadRequestException,
   Delete,
+  Put,
   UploadedFile,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { memoryStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { type AuthenticatedRequest, AuthGuard } from '../auth/auth.guard';
 // import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -53,8 +56,12 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.getAll();
+  findAll(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @Query('order') order: string = 'recent',
+  ) {
+    return this.postsService.getAll(+page, +limit, order);
   }
 
   @Get(':id')
@@ -63,22 +70,26 @@ export class PostsController {
   }
 
   @Patch(':id/like')
-  toggleLike(
-    @Param('id') id: string,
-    @Req() request: AuthenticatedRequest,
-  ) {
+  toggleLike(@Param('id') id: string, @Req() request: AuthenticatedRequest) {
     return this.postsService.toggleLike(id, request.user.sub);
   }
 
-  @Delete(':id')
-  remove(
+  @Put(':id')
+  update(
     @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
     @Req() request: AuthenticatedRequest,
   ) {
-    return this.postsService.remove(
+    return this.postsService.update(
       id,
+      updatePostDto,
       request.user.sub,
       request.user.role,
     );
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @Req() request: AuthenticatedRequest) {
+    return this.postsService.remove(id, request.user.sub, request.user.role);
   }
 }

@@ -9,3 +9,11 @@ export interface Comment {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedCommentsResponse {
+  data: Comment[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+}

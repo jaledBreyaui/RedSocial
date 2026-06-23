@@ -32,6 +32,9 @@ export class User {
     default: UserRole.USER,
   })
   role!: UserRole;
+
+  @Prop({ default: false })
+  isSuspended!: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

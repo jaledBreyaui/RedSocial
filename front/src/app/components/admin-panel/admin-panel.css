@@ -2,7 +2,9 @@
   display: block;
   min-height: 100dvh;
   color: #f5f3ff;
-  background: #080912;
+  background:
+    radial-gradient(circle at 78% 0%, rgba(101, 88, 232, 0.13), transparent 32rem),
+    #080912;
   font-family: Inter, Aptos, 'Segoe UI', sans-serif;
 }
 
@@ -16,69 +18,478 @@
 }
 
 .admin-content {
-  width: min(650px, 100%);
+  width: min(920px, 100%);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 0 0.75rem 2rem;
+  padding: 1.15rem 1rem 2.5rem;
 }
 
-.admin-content > header {
-  min-height: 82px;
-  padding: 1rem 0.75rem;
+.page-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+  min-height: 104px;
+  margin-bottom: 0.9rem;
+  padding: 1rem 0.25rem;
+  background: linear-gradient(180deg, rgba(8, 9, 18, 0.96), rgba(8, 9, 18, 0.76));
+  backdrop-filter: blur(18px);
 }
 
-.admin-content > header p {
+.page-header p,
+.admin-card > header p {
   margin: 0 0 0.2rem;
   color: #8b7cf6;
   font-size: 0.68rem;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.admin-content h1 {
+.page-header h1,
+.admin-card h2 {
   margin: 0;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.65rem;
   letter-spacing: -0.04em;
 }
 
-.empty-panel {
-  display: grid;
-  min-height: 260px;
-  place-items: center;
-  align-content: center;
-  padding: 2rem;
-  border: 1px solid #2b2d3d;
-  border-radius: 20px;
-  background: #11131d;
-  text-align: center;
+.page-header h1 {
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
 }
 
-.empty-panel i {
+.admin-summary {
   display: grid;
-  width: 52px;
-  height: 52px;
+  grid-template-columns: repeat(3, minmax(96px, 1fr));
+  gap: 0.55rem;
+}
+
+.admin-summary article {
+  min-height: 64px;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(139, 124, 246, 0.22);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    rgba(17, 19, 29, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.admin-summary article.danger {
+  border-color: rgba(255, 147, 139, 0.24);
+}
+
+.admin-summary span {
+  display: block;
+  color: #777589;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.admin-summary strong {
+  display: block;
+  margin-top: 0.2rem;
+  color: #f5f3ff;
+  font-size: 1.3rem;
+}
+
+.admin-card {
+  overflow: hidden;
   margin-bottom: 1rem;
+  border: 1px solid rgba(52, 54, 71, 0.82);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 160px),
+    #11131d;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+}
+
+.admin-card > header {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid #242633;
+}
+
+.admin-card h2 {
+  font-size: 1.2rem;
+}
+
+.admin-card > header > span,
+.admin-card > header > i {
+  display: grid;
+  min-width: 38px;
+  height: 38px;
   place-items: center;
-  border-radius: 15px;
+  border-radius: 12px;
   color: #a398ff;
-  background: #292440;
-  font-size: 1.35rem;
+  background: rgba(101, 88, 232, 0.16);
+  font-weight: 850;
 }
 
-.empty-panel h2 {
+form {
+  padding: 1.15rem;
+}
+
+.avatar-field {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid #242633;
+  border-radius: 16px;
+  background: rgba(13, 15, 24, 0.62);
+}
+
+.avatar-preview {
+  display: grid;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid rgba(139, 124, 246, 0.34);
+  border-radius: 50%;
+  color: #a398ff;
+  background:
+    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.18), transparent 38%),
+    rgba(101, 88, 232, 0.16);
+}
+
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-actions {
+  display: grid;
+  min-width: 0;
+  gap: 0.45rem;
+}
+
+.avatar-actions > span {
+  color: #aaa8b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.avatar-actions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.avatar-actions input[type='file'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.avatar-upload,
+.avatar-remove {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.avatar-upload {
+  border: 1px solid rgba(139, 124, 246, 0.45);
+  color: #d9d4ff;
+  background: #181624;
+}
+
+.avatar-remove {
+  border: 1px solid #4a2a31;
+  color: #ffaaa4;
+  background: #24171c;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+label span,
+.role-options legend {
+  color: #aaa8b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+:host ::ng-deep .p-inputtext {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #343647;
+  border-radius: 12px;
+  color: #f5f3ff;
+  background: #0d0f18;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+  border-color: #8b7cf6;
+  box-shadow: 0 0 0 3px rgba(139, 124, 246, 0.13);
+}
+
+.role-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.role-options legend {
+  width: 100%;
+}
+
+.role-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 0.8rem;
+  border: 1px solid #343647;
+  border-radius: 999px;
+  background: #0d0f18;
+}
+
+.submit-button {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: #6558e8;
+  font-weight: 850;
+  box-shadow: 0 12px 24px rgba(70, 57, 190, 0.22);
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #7568ef;
+}
+
+.admin-state {
+  margin: 0 0 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid #242633;
+  border-radius: 14px;
+  color: #aaa8b8;
+  background: #11131d;
+  line-height: 1.45;
+}
+
+.admin-card .admin-state {
+  margin: 1rem;
+}
+
+.error-state {
+  color: #ffaaa4;
+  background: #1b1116;
+}
+
+.success-state {
+  color: #d9d4ff;
+  background: #17142a;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.35rem;
+  border: 1px solid #242633;
+  border-radius: 16px;
+  background: rgba(17, 19, 29, 0.72);
+}
+
+.admin-tabs button {
+  display: inline-flex;
+  min-height: 42px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 12px;
+  color: #aaa8b8;
+  background: transparent;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.admin-tabs button:hover,
+.admin-tabs button.active {
+  color: #fff;
+  background: #181624;
+}
+
+.admin-tabs button.active {
+  box-shadow: inset 0 0 0 1px rgba(139, 124, 246, 0.32);
+}
+
+.users-list {
+  display: grid;
+}
+
+.user-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.95rem 1.15rem;
+  border-top: 1px solid #242633;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.user-row:first-child {
+  border-top: 0;
+}
+
+.user-row:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.user-row.suspended {
+  background: rgba(255, 147, 139, 0.055);
+}
+
+.user-main {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.avatar {
+  display: grid;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid #3b3d50;
+  border-radius: 50%;
+  color: #fff;
+  background:
+    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.22), transparent 36%),
+    #6558e8;
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-main h3,
+.user-main p {
+  overflow: hidden;
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.empty-panel p {
-  max-width: 360px;
-  margin: 0.6rem 0 0;
-  color: #8e8c9e;
-  font-size: 0.82rem;
-  line-height: 1.5;
+.user-main h3 {
+  font-size: 0.92rem;
+}
+
+.user-main p {
+  margin-top: 0.18rem;
+  color: #777589;
+  font-size: 0.76rem;
+}
+
+.user-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.suspend-button {
+  min-height: 36px;
+  padding: 0 0.85rem;
+  border: 1px solid #4a2a31;
+  border-radius: 999px;
+  color: #ffaaa4;
+  background: #24171c;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.suspend-button:hover:not(:disabled) {
+  border-color: #7a3b46;
+}
+
+.suspend-button.reactivate {
+  border-color: rgba(139, 124, 246, 0.45);
+  color: #d9d4ff;
+  background: #181624;
+}
+
+.suspend-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.stats-card {
+  min-height: 360px;
+}
+
+.stats-placeholder {
+  min-height: 260px;
+  margin: 1rem;
+  border: 1px dashed rgba(139, 124, 246, 0.28);
+  border-radius: 16px;
+  background:
+    linear-gradient(90deg, rgba(139, 124, 246, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(139, 124, 246, 0.08) 1px, transparent 1px),
+    rgba(13, 15, 24, 0.48);
+  background-size: 42px 42px;
+}
+
+@media (min-width: 1101px) {
+  .admin-page {
+    padding-left: 250px;
+  }
+
+  .admin-content {
+    width: min(980px, calc(100% - 2rem));
+    margin: 0;
+    padding-left: 2rem;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -92,6 +503,29 @@
   }
 }
 
+@media (max-width: 760px) {
+  .page-header {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .form-grid,
+  .user-row {
+    grid-template-columns: 1fr;
+  }
+
+  .user-meta {
+    justify-content: flex-start;
+  }
+
+  .suspend-button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 520px) {
   .admin-page {
     padding-left: 72px;
@@ -99,5 +533,9 @@
 
   .admin-content {
     padding-inline: 0.5rem;
+  }
+
+  .admin-summary {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,7 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Post, PostDetail, ToggleLikeResponse } from '../models/post';
+import {
+  PaginatedPostsResponse,
+  Post,
+  PostDetail,
+  ToggleLikeResponse,
+} from '../models/post';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +16,18 @@ export class PostsService {
   private readonly apiUrl = 'http://localhost:3000/posts';
   private readonly serverUrl = 'http://localhost:3000';
 
-  obtenerTodos(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.apiUrl, {
+  obtenerTodos(
+    page = 1,
+    limit = 10,
+    order: 'recent' | 'likes' = 'recent',
+  ): Observable<PaginatedPostsResponse> {
+    return this.http.get<PaginatedPostsResponse>(this.apiUrl, {
       headers: this.obtenerHeaders(),
+      params: {
+        page,
+        limit,
+        order,
+      },
     });
   }
 
@@ -34,6 +48,14 @@ export class PostsService {
     return this.http.post<Post>(`${this.apiUrl}/create`, formData, {
       headers: this.obtenerHeaders(),
     });
+  }
+
+  actualizar(id: string, content: string): Observable<Post> {
+    return this.http.put<Post>(
+      `${this.apiUrl}/${id}`,
+      { content },
+      { headers: this.obtenerHeaders() },
+    );
   }
 
   toggleLike(id: string): Observable<ToggleLikeResponse> {

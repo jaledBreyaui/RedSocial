@@ -56,7 +56,37 @@ export class Profile {
     this.recentPosts.update((items) =>
       items.map((item) =>
         item.post._id === profilePost.post._id
-          ? { ...item, comments: [...item.comments, comment] }
+          ? { ...item, comments: [comment, ...item.comments] }
+          : item,
+      ),
+    );
+  }
+
+  comentarioActualizado(
+    profilePost: ProfilePost,
+    commentActualizado: Comment,
+  ): void {
+    this.recentPosts.update((items) =>
+      items.map((item) =>
+        item.post._id === profilePost.post._id
+          ? {
+              ...item,
+              comments: item.comments.map((comment) =>
+                comment._id === commentActualizado._id
+                  ? commentActualizado
+                  : comment,
+              ),
+            }
+          : item,
+      ),
+    );
+  }
+
+  postActualizado(postActualizado: Post): void {
+    this.recentPosts.update((items) =>
+      items.map((item) =>
+        item.post._id === postActualizado._id
+          ? { ...item, post: postActualizado }
           : item,
       ),
     );
@@ -75,9 +105,9 @@ export class Profile {
         switchMap((user) => {
           this.user.set(user);
 
-          return this.postsService.obtenerTodos().pipe(
-            map((posts) =>
-              posts
+          return this.postsService.obtenerTodos(1, 50).pipe(
+            map((response) =>
+              response.data
                 .filter((post) => post.author._id === user._id)
                 .sort(
                   (a, b) =>
@@ -95,7 +125,12 @@ export class Profile {
                 posts.map((post) =>
                   this.commentsService
                     .obtenerPorPost(post._id)
-                    .pipe(map((comments) => ({ post, comments }))),
+                    .pipe(
+                      map((response) => ({
+                        post,
+                        comments: response.data,
+                      })),
+                    ),
                 ),
               );
             }),

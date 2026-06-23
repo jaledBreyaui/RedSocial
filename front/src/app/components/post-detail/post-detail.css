@@ -109,6 +109,39 @@
   font-size: 0.82rem;
 }
 
+.error-text {
+  color: #ffaaa4;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.load-more button {
+  min-width: 180px;
+  min-height: 40px;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid #343647;
+  border-radius: 11px;
+  color: #f5f3ff;
+  background: #151722;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.load-more button:hover:not(:disabled) {
+  border-color: #6558e8;
+  background: #1a1c2a;
+}
+
+.load-more button:disabled {
+  color: #777589;
+  cursor: wait;
+  opacity: 0.75;
+}
+
 @media (max-width: 1100px) {
   .detail-page {
     padding-left: 84px;

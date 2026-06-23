@@ -61,6 +61,7 @@
                 [currentUserId]="currentUser._id"
                 [currentUserRole]="currentUser.role ?? 'user'"
                 (commentCreated)="comentarioCreado(profilePost, $event)"
+                (postUpdated)="postActualizado($event)"
                 (postDeleted)="postEliminado($event)"
               />
 
@@ -71,7 +72,11 @@
                     <span>{{ profilePost.comments.length }}</span>
                   </header>
                   @for (comment of profilePost.comments; track comment._id) {
-                    <app-comment [comment]="comment" />
+                    <app-comment
+                      [comment]="comment"
+                      [currentUserId]="currentUser._id"
+                      (commentUpdated)="comentarioActualizado(profilePost, $event)"
+                    />
                   }
                 </div>
               } @else {

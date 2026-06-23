@@ -6,10 +6,10 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Post } from '../../models/post';
-import { Auth } from '../../services/auth';
+import { SessionService } from '../../services/session';
 import { UsersService } from '../../services/users';
 import { CrearPost } from '../crearpost/crearpost';
 
@@ -27,9 +27,8 @@ export class Navbar implements OnInit {
   readonly isAdmin = signal(false);
 
   constructor(
-    private readonly router: Router,
     private readonly usersService: UsersService,
-    private readonly authService: Auth,
+    private readonly sessionService: SessionService,
   ) {}
 
   ngOnInit(): void {
@@ -40,10 +39,7 @@ export class Navbar implements OnInit {
   }
 
   cerrarSesion(): void {
-    this.authService.logout().subscribe({
-      next: () => void this.router.navigate(['/inicio']),
-      error: () => void this.router.navigate(['/inicio']),
-    });
+    this.sessionService.logout();
   }
 
   abrirCrearPost(): void {

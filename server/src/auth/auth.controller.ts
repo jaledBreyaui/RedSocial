@@ -2,22 +2,26 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
 import { memoryStorage } from 'multer';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { type AuthenticatedRequest, AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 
 const ACCESS_TOKEN_COOKIE = 'accessToken';
-const ACCESS_TOKEN_MAX_AGE = 24 * 60 * 60 * 1000;
+const ACCESS_TOKEN_MAX_AGE = 5 * 60 * 1000;
 
 @Controller('auth')
 export class AuthController {
@@ -59,15 +63,38 @@ export class AuthController {
   ) {
     const { accessToken } = await this.authService.login(dto);
 
-    response.cookie(ACCESS_TOKEN_COOKIE, accessToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
-      maxAge: ACCESS_TOKEN_MAX_AGE,
-      path: '/',
-    });
+    this.setAccessTokenCookie(response, accessToken);
 
-    return { ok: true };
+    return {
+      ok: true,
+      expiresAt: this.authService.getExpiresAtFromToken(accessToken),
+    };
+  }
+
+  @Post('refresh')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @Req() request: AuthenticatedRequest,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { accessToken } = await this.authService.refresh(request.user.sub);
+
+    this.setAccessTokenCookie(response, accessToken);
+
+    return {
+      ok: true,
+      expiresAt: this.authService.getExpiresAtFromToken(accessToken),
+    };
+  }
+
+  @Get('session')
+  @UseGuards(AuthGuard)
+  session(@Req() request: AuthenticatedRequest) {
+    return {
+      authenticated: true,
+      expiresAt: request.user.exp ? request.user.exp * 1000 : null,
+    };
   }
 
   @Post('logout')
@@ -80,5 +107,15 @@ export class AuthController {
     });
 
     return { ok: true };
+  }
+
+  private setAccessTokenCookie(response: Response, accessToken: string) {
+    response.cookie(ACCESS_TOKEN_COOKIE, accessToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+      maxAge: ACCESS_TOKEN_MAX_AGE,
+      path: '/',
+    });
   }
 }

@@ -1,1 +1,41 @@
 <router-outlet />
+
+@if (sessionService.warningVisible()) {
+  <div class="session-backdrop" role="presentation">
+    <section
+      class="session-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="session-title"
+      aria-describedby="session-description"
+    >
+      <div class="session-dialog__marker" aria-hidden="true"></div>
+
+      <div class="session-dialog__content">
+        <p class="session-dialog__eyebrow">Sesion activa</p>
+        <h2 id="session-title">Tu sesion esta por vencer</h2>
+        <p id="session-description">
+          Te quedan 5 minutos. Podes extenderla ahora o dejar que se cierre sola.
+        </p>
+      </div>
+
+      <footer>
+        <button
+          type="button"
+          class="session-button session-button--secondary"
+          (click)="sessionService.keepUntilExpiration()"
+        >
+          No extender
+        </button>
+        <button
+          type="button"
+          class="session-button"
+          [disabled]="sessionService.extending()"
+          (click)="sessionService.extend()"
+        >
+          {{ sessionService.extending() ? 'Extendiendo...' : 'Extender sesion' }}
+        </button>
+      </footer>
+    </section>
+  </div>
+}

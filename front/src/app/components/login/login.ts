@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { Auth } from '../../services/auth';
+import { SessionService } from '../../services/session';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class Login {
   private readonly authService = inject(Auth);
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
+  private readonly sessionService = inject(SessionService);
 
   readonly formularioLogin = this.fb.nonNullable.group({
     correo: ['', [Validators.required, Validators.email]],
@@ -42,7 +44,8 @@ export class Login {
     this.errorLogin = '';
 
     this.authService.login(correo, password).subscribe({
-      next: () => {
+      next: (session) => {
+        this.sessionService.start(session);
         void this.router.navigate(['/timeline']);
       },
       error: (error: HttpErrorResponse) => {

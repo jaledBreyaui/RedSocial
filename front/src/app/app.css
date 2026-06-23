@@ -1,1 +1,105 @@
 @import 'primeicons/primeicons.css';
+
+.session-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(8, 9, 18, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.session-dialog {
+  position: relative;
+  width: min(430px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(139, 124, 246, 0.34);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 130px),
+    #11131d;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+  color: #f5f3ff;
+}
+
+.session-dialog__marker {
+  height: 4px;
+  background: linear-gradient(90deg, #6558e8, #8b7cf6, #ff938b);
+}
+
+.session-dialog__content {
+  padding: 1.25rem 1.25rem 0.9rem;
+}
+
+.session-dialog__eyebrow {
+  margin: 0 0 0.35rem;
+  color: #8b7cf6;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.session-dialog h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.35rem;
+  line-height: 1.08;
+}
+
+.session-dialog p {
+  margin: 0.65rem 0 0;
+  color: #d6d3e0;
+  line-height: 1.45;
+}
+
+.session-dialog footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.9rem 1.25rem 1.25rem;
+}
+
+.session-button {
+  min-height: 40px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: #6558e8;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.session-button:hover:not(:disabled) {
+  background: #7568ef;
+}
+
+.session-button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.session-button--secondary {
+  border: 1px solid #343647;
+  color: #d6d3e0;
+  background: #181624;
+}
+
+.session-button--secondary:hover:not(:disabled) {
+  background: #202234;
+}
+
+@media (max-width: 460px) {
+  .session-dialog footer {
+    display: grid;
+  }
+
+  .session-button {
+    width: 100%;
+  }
+}

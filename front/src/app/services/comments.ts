@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of, tap } from 'rxjs';
+import { API_BASE_URL } from '../config/api';
 import { Comment, PaginatedCommentsResponse } from '../models/comment';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Comment, PaginatedCommentsResponse } from '../models/comment';
 })
 export class CommentsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/posts';
+  private readonly apiUrl = `${API_BASE_URL}/posts`;
   private readonly commentsCache = new Map<string, PaginatedCommentsResponse>();
 
   crear(postId: string, content: string): Observable<Comment> {

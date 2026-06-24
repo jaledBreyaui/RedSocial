@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../config/api';
 
 export interface AuthSessionResponse {
   ok?: boolean;
@@ -12,7 +13,7 @@ export interface AuthSessionResponse {
 })
 export class Auth {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/auth';
+  private readonly apiUrl = `${API_BASE_URL}/auth`;
 
   register(formData: FormData) {
     return this.http.post(`${this.apiUrl}/register`, formData);

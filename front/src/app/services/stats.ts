@@ -6,13 +6,14 @@ import {
   CommentsByPostStat,
   PostsByUserStat,
 } from '../models/stats';
+import { API_BASE_URL } from '../config/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StatsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/admin/stats';
+  private readonly apiUrl = `${API_BASE_URL}/admin/stats`;
 
   obtenerPublicacionesPorUsuario(
     from: string,

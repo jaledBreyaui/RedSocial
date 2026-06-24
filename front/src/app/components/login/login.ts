@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { timeout } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -43,8 +44,9 @@ export class Login {
     this.enviando = true;
     this.errorLogin = '';
 
-    this.authService.login(correo, password).subscribe({
+    this.authService.login(correo, password).pipe(timeout(20000)).subscribe({
       next: (session) => {
+        this.enviando = false;
         this.sessionService.start(session);
         void this.router.navigate(['/timeline']);
       },

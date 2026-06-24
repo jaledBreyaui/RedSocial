@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api';
 import { PostAuthor } from '../models/post';
 import { User } from '../models/user';
 
@@ -9,7 +10,7 @@ import { User } from '../models/user';
 })
 export class UsersService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/users';
+  private readonly apiUrl = `${API_BASE_URL}/users`;
 
   obtenerActual(): Observable<PostAuthor> {
     return this.http.get<PostAuthor>(`${this.apiUrl}/me`, {

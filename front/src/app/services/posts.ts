@@ -7,14 +7,15 @@ import {
   PostDetail,
   ToggleLikeResponse,
 } from '../models/post';
+import { API_BASE_URL } from '../config/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/posts';
-  private readonly serverUrl = 'http://localhost:3000';
+  private readonly apiUrl = `${API_BASE_URL}/posts`;
+  private readonly serverUrl = API_BASE_URL;
 
   obtenerTodos(
     page = 1,

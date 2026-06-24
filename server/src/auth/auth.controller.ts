@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
-import type { Response } from 'express';
+import type { CookieOptions, Response } from 'express';
 import { memoryStorage } from 'multer';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { type AuthenticatedRequest, AuthGuard } from './auth.guard';
@@ -101,18 +101,10 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) response: Response) {
-    response.clearCookie(this.accessTokenCookie, {
-      sameSite: 'lax',
-      secure: false,
-      path: '/',
-    });
+    response.clearCookie(this.accessTokenCookie, this.cookieOptions);
 
     if (this.accessTokenCookie !== 'accessToken') {
-      response.clearCookie('accessToken', {
-        sameSite: 'lax',
-        secure: false,
-        path: '/',
-      });
+      response.clearCookie('accessToken', this.cookieOptions);
     }
 
     return { ok: true };
@@ -120,11 +112,9 @@ export class AuthController {
 
   private setAccessTokenCookie(response: Response, accessToken: string) {
     response.cookie(this.accessTokenCookie, accessToken, {
+      ...this.cookieOptions,
       httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
       maxAge: this.tokenDurationSeconds * 1000,
-      path: '/',
     });
   }
 
@@ -138,5 +128,18 @@ export class AuthController {
     );
 
     return Number.isFinite(duration) && duration > 0 ? duration : 900;
+  }
+
+  private get cookieOptions(): CookieOptions {
+    const secure = this.configService.get<string>('COOKIE_SECURE') === 'true';
+    const sameSite = this.configService.get<'lax' | 'strict' | 'none'>(
+      'COOKIE_SAME_SITE',
+    );
+
+    return {
+      sameSite: sameSite ?? (secure ? 'none' : 'lax'),
+      secure,
+      path: '/',
+    };
   }
 }

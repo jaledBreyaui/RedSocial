@@ -11,7 +11,8 @@
       <img
         [src]="avatarUrl"
         [alt]="'Avatar de ' + post.author.name"
-        (error)="avatarFallido.set(true)"
+        appBrokenImage
+        (appBrokenImage)="avatarFallido.set(true)"
       />
     } @else {
       <span>{{ post.author | inicialesUsuario }}</span>

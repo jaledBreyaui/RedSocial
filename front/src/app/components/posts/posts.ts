@@ -14,6 +14,7 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MenuModule } from 'primeng/menu';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { BrokenImageDirective } from '../../directives/broken-image.directive';
 import { Comment } from '../../models/comment';
 import { Post } from '../../models/post';
 import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
@@ -35,6 +36,7 @@ import { CrearComentario } from '../crearcomentario/crearcomentario';
     TiempoRelativoPipe,
     UsuarioHandlePipe,
     AutofocusDirective,
+    BrokenImageDirective,
   ],
   providers: [ConfirmationService],
   templateUrl: './posts.html',

@@ -4,7 +4,8 @@
       <img
         [src]="avatarUrl"
         [alt]="'Avatar de ' + comment().author.name"
-        (error)="avatarFallido.set(true)"
+        appBrokenImage
+        (appBrokenImage)="avatarFallido.set(true)"
       />
     } @else {
       <span>{{ comment().author | inicialesUsuario }}</span>

@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { BrokenImageDirective } from '../../directives/broken-image.directive';
 import { LimitCounterDirective } from '../../directives/limit-counter.directive';
 import { Comment } from '../../models/comment';
 import { Post } from '../../models/post';
@@ -32,6 +33,7 @@ import { UsersService } from '../../services/users';
     UsuarioHandlePipe,
     AutofocusDirective,
     LimitCounterDirective,
+    BrokenImageDirective,
   ],
   templateUrl: './crearcomentario.html',
   styleUrl: './crearcomentario.css',

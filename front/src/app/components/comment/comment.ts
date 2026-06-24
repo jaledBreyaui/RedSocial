@@ -1,6 +1,7 @@
 import { Component, EventEmitter, input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { BrokenImageDirective } from '../../directives/broken-image.directive';
 import { Comment } from '../../models/comment';
 import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
 import { TiempoRelativoPipe } from '../../pipes/tiempo-relativo.pipe';
@@ -16,6 +17,7 @@ import { CommentsService } from '../../services/comments';
     TiempoRelativoPipe,
     UsuarioHandlePipe,
     AutofocusDirective,
+    BrokenImageDirective,
   ],
   templateUrl: './comment.html',
   styleUrl: './comment.css',

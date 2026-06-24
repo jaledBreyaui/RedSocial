@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { BrokenImageDirective } from '../../directives/broken-image.directive';
 import { LimitCounterDirective } from '../../directives/limit-counter.directive';
 import { Post } from '../../models/post';
 import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
@@ -29,6 +30,7 @@ import { UsersService } from '../../services/users';
     InicialesUsuarioPipe,
     AutofocusDirective,
     LimitCounterDirective,
+    BrokenImageDirective,
   ],
   templateUrl: './crearpost.html',
   styleUrl: './crearpost.css',

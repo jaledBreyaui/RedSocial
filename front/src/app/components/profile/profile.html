@@ -18,7 +18,8 @@
             <img
               [src]="avatarUrl"
               [alt]="'Foto de perfil de ' + currentUser.name"
-              (error)="avatarFallido.set(true)"
+              appBrokenImage
+              (appBrokenImage)="avatarFallido.set(true)"
             />
           } @else {
             <span>{{ currentUser | inicialesUsuario }}</span>

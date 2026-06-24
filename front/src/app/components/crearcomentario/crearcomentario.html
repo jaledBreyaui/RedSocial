@@ -21,7 +21,8 @@
           <img
             [src]="avatarUrl"
             [alt]="'Avatar de ' + usuarioActual()?.name"
-            (error)="avatarFallido.set(true)"
+            appBrokenImage
+            (appBrokenImage)="avatarFallido.set(true)"
           />
         } @else {
           <span aria-hidden="true">{{ usuarioActual() | inicialesUsuario }}</span>

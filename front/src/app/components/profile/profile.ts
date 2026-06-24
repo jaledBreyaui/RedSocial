@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { forkJoin, map, of, switchMap } from 'rxjs';
+import { BrokenImageDirective } from '../../directives/broken-image.directive';
 import { Comment } from '../../models/comment';
 import { Post, PostAuthor } from '../../models/post';
 import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
@@ -20,7 +21,14 @@ interface ProfilePost {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [Navbar, Posts, CommentComponent, InicialesUsuarioPipe, UsuarioHandlePipe],
+  imports: [
+    Navbar,
+    Posts,
+    CommentComponent,
+    InicialesUsuarioPipe,
+    UsuarioHandlePipe,
+    BrokenImageDirective,
+  ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

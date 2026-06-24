@@ -14,16 +14,20 @@
     } @else if (user(); as currentUser) {
       <section class="identity">
         <div class="profile-avatar">
-          @if (avatarUrl) {
-            <img [src]="avatarUrl" [alt]="'Foto de perfil de ' + currentUser.name" />
+          @if (avatarUrl && !avatarFallido()) {
+            <img
+              [src]="avatarUrl"
+              [alt]="'Foto de perfil de ' + currentUser.name"
+              (error)="avatarFallido.set(true)"
+            />
           } @else {
-            <span>{{ initials }}</span>
+            <span>{{ currentUser | inicialesUsuario }}</span>
           }
         </div>
 
         <div class="identity-copy">
           <h2>{{ currentUser.name }} {{ currentUser.lastName }}</h2>
-          <p>{{ username }}</p>
+          <p>{{ currentUser | usuarioHandle }}</p>
         </div>
 
         <dl class="user-data">

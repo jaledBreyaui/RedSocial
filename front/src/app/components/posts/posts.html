@@ -6,11 +6,15 @@
   (click)="abrirDetalle()"
   (keydown.enter)="abrirDetalle()"
 >
-  <div class="avatar" [class.has-image]="avatarUrl">
-    @if (avatarUrl) {
-      <img [src]="avatarUrl" [alt]="'Avatar de ' + post.author.name" />
+  <div class="avatar" [class.has-image]="avatarUrl && !avatarFallido()">
+    @if (avatarUrl && !avatarFallido()) {
+      <img
+        [src]="avatarUrl"
+        [alt]="'Avatar de ' + post.author.name"
+        (error)="avatarFallido.set(true)"
+      />
     } @else {
-      <span>{{ authorInitials }}</span>
+      <span>{{ post.author | inicialesUsuario }}</span>
     }
   </div>
 
@@ -18,8 +22,8 @@
     <header class="post-header">
       <div class="author-line">
         <strong>{{ post.author.name }} {{ post.author.lastName }}</strong>
-        <span>{{ username }}</span>
-        @if (createdAtLabel) {
+        <span>{{ post.author | usuarioHandle }}</span>
+        @if (post.createdAt | tiempoRelativo; as createdAtLabel) {
           <span aria-hidden="true">·</span>
           <time
             [attr.datetime]="post.createdAt"
@@ -65,6 +69,7 @@
           [disabled]="guardandoEdicion()"
           maxlength="200"
           rows="4"
+          [appAutofocus]="true"
           aria-label="Contenido de la publicacion"
         ></textarea>
 

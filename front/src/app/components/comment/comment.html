@@ -1,9 +1,13 @@
 <article class="comment">
   <div class="avatar">
-    @if (avatarUrl) {
-      <img [src]="avatarUrl" [alt]="'Avatar de ' + comment().author.name" />
+    @if (avatarUrl && !avatarFallido()) {
+      <img
+        [src]="avatarUrl"
+        [alt]="'Avatar de ' + comment().author.name"
+        (error)="avatarFallido.set(true)"
+      />
     } @else {
-      <span>{{ initials }}</span>
+      <span>{{ comment().author | inicialesUsuario }}</span>
     }
   </div>
 
@@ -11,8 +15,8 @@
     <header>
       <div class="comment-meta">
         <strong>{{ comment().author.name }} {{ comment().author.lastName }}</strong>
-        <span>{{ username }}</span>
-        @if (createdAtLabel) {
+        <span>{{ comment().author | usuarioHandle }}</span>
+        @if (comment().createdAt | tiempoRelativo; as createdAtLabel) {
           <span aria-hidden="true">·</span>
           <time [attr.datetime]="comment().createdAt">{{ createdAtLabel }}</time>
         }
@@ -42,6 +46,7 @@
           [disabled]="guardandoEdicion()"
           maxlength="200"
           rows="3"
+          [appAutofocus]="true"
           aria-label="Contenido del comentario"
         ></textarea>
 

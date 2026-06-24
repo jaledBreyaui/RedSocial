@@ -11,14 +11,25 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { LimitCounterDirective } from '../../directives/limit-counter.directive';
 import { Post } from '../../models/post';
+import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
 import { PostsService } from '../../services/posts';
 import { UsersService } from '../../services/users';
 
 @Component({
   selector: 'app-crearpost',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, TextareaModule, ButtonModule],
+  imports: [
+    ReactiveFormsModule,
+    DialogModule,
+    TextareaModule,
+    ButtonModule,
+    InicialesUsuarioPipe,
+    AutofocusDirective,
+    LimitCounterDirective,
+  ],
   templateUrl: './crearpost.html',
   styleUrl: './crearpost.css',
 })
@@ -34,6 +45,7 @@ export class CrearPost implements OnDestroy {
   readonly error = signal('');
   readonly imagenPreview = signal<string | undefined>(undefined);
   readonly usuarioActual = signal<Post['author'] | undefined>(undefined);
+  readonly avatarFallido = signal(false);
 
   imagen?: File;
 
@@ -43,6 +55,7 @@ export class CrearPost implements OnDestroy {
 
   abrir(): void {
     this.error.set('');
+    this.avatarFallido.set(false);
     this.visible.set(true);
 
     if (!this.usuarioActual()) {
@@ -57,13 +70,6 @@ export class CrearPost implements OnDestroy {
 
   get avatarUrl(): string | undefined {
     return this.usuarioActual()?.avatarURL;
-  }
-
-  get iniciales(): string {
-    const user = this.usuarioActual();
-    if (!user) return 'NS';
-
-    return `${user.name.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
   }
 
   cerrar(): void {

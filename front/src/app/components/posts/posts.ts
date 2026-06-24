@@ -13,8 +13,12 @@ import { Router } from '@angular/router';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MenuModule } from 'primeng/menu';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { Comment } from '../../models/comment';
 import { Post } from '../../models/post';
+import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
+import { TiempoRelativoPipe } from '../../pipes/tiempo-relativo.pipe';
+import { UsuarioHandlePipe } from '../../pipes/usuario-handle.pipe';
 import { CommentsService } from '../../services/comments';
 import { PostsService } from '../../services/posts';
 import { CrearComentario } from '../crearcomentario/crearcomentario';
@@ -22,7 +26,16 @@ import { CrearComentario } from '../crearcomentario/crearcomentario';
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [CrearComentario, ConfirmDialogModule, FormsModule, MenuModule],
+  imports: [
+    CrearComentario,
+    ConfirmDialogModule,
+    FormsModule,
+    MenuModule,
+    InicialesUsuarioPipe,
+    TiempoRelativoPipe,
+    UsuarioHandlePipe,
+    AutofocusDirective,
+  ],
   providers: [ConfirmationService],
   templateUrl: './posts.html',
   styleUrl: './posts.css',
@@ -47,6 +60,7 @@ export class Posts implements OnInit {
   readonly editando = signal(false);
   readonly guardandoEdicion = signal(false);
   readonly errorEdicion = signal('');
+  readonly avatarFallido = signal(false);
   contenidoEditado = '';
   readonly isOwnPost = computed(
     () =>
@@ -220,44 +234,6 @@ export class Posts implements OnInit {
 
   get imageUrl(): string | undefined {
     return this.postsService.obtenerUrlImagen(this.post.imageURL);
-  }
-
-  get authorInitials(): string {
-    const name = this.post.author.name?.trim().charAt(0) ?? '';
-    const lastName = this.post.author.lastName?.trim().charAt(0) ?? '';
-
-    return `${name}${lastName}`.toUpperCase() || 'NS';
-  }
-
-  get username(): string {
-    return `@${this.post.author.email.split('@')[0]}`;
-  }
-
-  get createdAtLabel(): string {
-    const createdAt = new Date(this.post.createdAt);
-
-    if (Number.isNaN(createdAt.getTime())) {
-      return '';
-    }
-
-    const elapsedMinutes = Math.max(
-      0,
-      Math.floor((Date.now() - createdAt.getTime()) / 60000),
-    );
-
-    if (elapsedMinutes < 1) return 'ahora';
-    if (elapsedMinutes < 60) return `${elapsedMinutes} min`;
-
-    const elapsedHours = Math.floor(elapsedMinutes / 60);
-    if (elapsedHours < 24) return `${elapsedHours} h`;
-
-    const elapsedDays = Math.floor(elapsedHours / 24);
-    if (elapsedDays < 30) return `${elapsedDays} d`;
-
-    const elapsedMonths = Math.floor(elapsedDays / 30);
-    if (elapsedMonths < 12) return `${elapsedMonths} mes`;
-
-    return `${Math.floor(elapsedMonths / 12)} a`;
   }
 
   get createdAtExactLabel(): string {

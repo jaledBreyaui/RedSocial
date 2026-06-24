@@ -12,6 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
 import { memoryStorage } from 'multer';
@@ -20,12 +21,12 @@ import { type AuthenticatedRequest, AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 
-const ACCESS_TOKEN_COOKIE = 'accessToken';
-const ACCESS_TOKEN_MAX_AGE = 5 * 60 * 1000;
-
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.OK)
@@ -100,22 +101,42 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) response: Response) {
-    response.clearCookie(ACCESS_TOKEN_COOKIE, {
+    response.clearCookie(this.accessTokenCookie, {
       sameSite: 'lax',
       secure: false,
       path: '/',
     });
+
+    if (this.accessTokenCookie !== 'accessToken') {
+      response.clearCookie('accessToken', {
+        sameSite: 'lax',
+        secure: false,
+        path: '/',
+      });
+    }
 
     return { ok: true };
   }
 
   private setAccessTokenCookie(response: Response, accessToken: string) {
-    response.cookie(ACCESS_TOKEN_COOKIE, accessToken, {
+    response.cookie(this.accessTokenCookie, accessToken, {
       httpOnly: true,
       sameSite: 'lax',
       secure: false,
-      maxAge: ACCESS_TOKEN_MAX_AGE,
+      maxAge: this.tokenDurationSeconds * 1000,
       path: '/',
     });
+  }
+
+  private get accessTokenCookie(): string {
+    return this.configService.get<string>('ACCESS_TOKEN_COOKIE') ?? 'accessToken';
+  }
+
+  private get tokenDurationSeconds(): number {
+    const duration = Number(
+      this.configService.get<string>('TOKEN_DURATION_S') ?? 900,
+    );
+
+    return Number.isFinite(duration) && duration > 0 ? duration : 900;
   }
 }

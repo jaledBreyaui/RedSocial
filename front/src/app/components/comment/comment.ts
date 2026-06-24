@@ -1,12 +1,22 @@
 import { Component, EventEmitter, input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { Comment } from '../../models/comment';
+import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
+import { TiempoRelativoPipe } from '../../pipes/tiempo-relativo.pipe';
+import { UsuarioHandlePipe } from '../../pipes/usuario-handle.pipe';
 import { CommentsService } from '../../services/comments';
 
 @Component({
   selector: 'app-comment',
   standalone: true,
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    InicialesUsuarioPipe,
+    TiempoRelativoPipe,
+    UsuarioHandlePipe,
+    AutofocusDirective,
+  ],
   templateUrl: './comment.html',
   styleUrl: './comment.css',
 })
@@ -18,6 +28,7 @@ export class CommentComponent {
   readonly editando = signal(false);
   readonly guardandoEdicion = signal(false);
   readonly errorEdicion = signal('');
+  readonly avatarFallido = signal(false);
   contenidoEditado = '';
 
   constructor(private readonly commentsService: CommentsService) {}
@@ -92,30 +103,4 @@ export class CommentComponent {
     return this.comment().author.avatarURL;
   }
 
-  get initials(): string {
-    const author = this.comment().author;
-    return `${author.name.charAt(0)}${author.lastName.charAt(0)}`.toUpperCase();
-  }
-
-  get username(): string {
-    return `@${this.comment().author.email.split('@')[0]}`;
-  }
-
-  get createdAtLabel(): string {
-    const createdAt = new Date(this.comment().createdAt);
-    if (Number.isNaN(createdAt.getTime())) return '';
-
-    const minutes = Math.max(
-      0,
-      Math.floor((Date.now() - createdAt.getTime()) / 60000),
-    );
-
-    if (minutes < 1) return 'ahora';
-    if (minutes < 60) return `${minutes} min`;
-
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} h`;
-
-    return `${Math.floor(hours / 24)} d`;
-  }
 }

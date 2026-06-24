@@ -3,6 +3,8 @@ import { Component, signal } from '@angular/core';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import { Comment } from '../../models/comment';
 import { Post, PostAuthor } from '../../models/post';
+import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
+import { UsuarioHandlePipe } from '../../pipes/usuario-handle.pipe';
 import { CommentsService } from '../../services/comments';
 import { PostsService } from '../../services/posts';
 import { UsersService } from '../../services/users';
@@ -18,7 +20,7 @@ interface ProfilePost {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [Navbar, Posts, CommentComponent],
+  imports: [Navbar, Posts, CommentComponent, InicialesUsuarioPipe, UsuarioHandlePipe],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -27,6 +29,7 @@ export class Profile {
   readonly recentPosts = signal<ProfilePost[]>([]);
   readonly cargando = signal(true);
   readonly error = signal('');
+  readonly avatarFallido = signal(false);
 
   constructor(
     private readonly usersService: UsersService,
@@ -38,18 +41,6 @@ export class Profile {
 
   get avatarUrl(): string | undefined {
     return this.user()?.avatarURL;
-  }
-
-  get initials(): string {
-    const user = this.user();
-    if (!user) return 'NS';
-
-    return `${user.name.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
-  }
-
-  get username(): string {
-    const user = this.user();
-    return user ? `@${user.email.split('@')[0]}` : '';
   }
 
   comentarioCreado(profilePost: ProfilePost, comment: Comment): void {

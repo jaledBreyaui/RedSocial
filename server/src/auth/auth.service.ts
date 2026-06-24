@@ -3,6 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -11,14 +12,13 @@ import { LoginDto } from './dto/login.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UserRole } from '../users/enums/user-role.enum';
 
-const SESSION_EXPIRES_IN_SECONDS = 5 * 60;
-
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly configService: ConfigService,
   ) {}
 
   async register(
@@ -109,7 +109,15 @@ export class AuthService {
     role: UserRole;
   }) {
     return this.jwtService.signAsync(payload, {
-      expiresIn: SESSION_EXPIRES_IN_SECONDS,
+      expiresIn: this.tokenDurationSeconds,
     });
+  }
+
+  private get tokenDurationSeconds(): number {
+    const duration = Number(
+      this.configService.get<string>('TOKEN_DURATION_S') ?? 900,
+    );
+
+    return Number.isFinite(duration) && duration > 0 ? duration : 900;
   }
 }

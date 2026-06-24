@@ -11,15 +11,28 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { LimitCounterDirective } from '../../directives/limit-counter.directive';
 import { Comment } from '../../models/comment';
 import { Post } from '../../models/post';
+import { InicialesUsuarioPipe } from '../../pipes/iniciales-usuario.pipe';
+import { UsuarioHandlePipe } from '../../pipes/usuario-handle.pipe';
 import { CommentsService } from '../../services/comments';
 import { UsersService } from '../../services/users';
 
 @Component({
   selector: 'app-crearcomentario',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, TextareaModule, ButtonModule],
+  imports: [
+    ReactiveFormsModule,
+    DialogModule,
+    TextareaModule,
+    ButtonModule,
+    InicialesUsuarioPipe,
+    UsuarioHandlePipe,
+    AutofocusDirective,
+    LimitCounterDirective,
+  ],
   templateUrl: './crearcomentario.html',
   styleUrl: './crearcomentario.css',
 })
@@ -35,6 +48,7 @@ export class CrearComentario {
   readonly enviando = signal(false);
   readonly error = signal('');
   readonly usuarioActual = signal<Post['author'] | undefined>(undefined);
+  readonly avatarFallido = signal(false);
 
   readonly formulario = this.fb.nonNullable.group({
     content: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
@@ -42,6 +56,7 @@ export class CrearComentario {
 
   abrir(): void {
     this.error.set('');
+    this.avatarFallido.set(false);
     this.visible.set(true);
 
     if (!this.usuarioActual()) {
@@ -88,18 +103,7 @@ export class CrearComentario {
       });
   }
 
-  get destinatario(): string {
-    return `@${this.post().author.email.split('@')[0]}`;
-  }
-
   get avatarUrl(): string | undefined {
     return this.usuarioActual()?.avatarURL;
-  }
-
-  get iniciales(): string {
-    const user = this.usuarioActual();
-    if (!user) return 'NS';
-
-    return `${user.name.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
   }
 }

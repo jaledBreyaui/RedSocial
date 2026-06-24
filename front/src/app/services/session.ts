@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth, AuthSessionResponse } from './auth';
 
-const WARNING_BEFORE_EXPIRATION_MS = 2.5 * 60 * 1000;
+const WARNING_BEFORE_EXPIRATION_MS = 5 * 60 * 1000;
 
 @Injectable({
   providedIn: 'root',

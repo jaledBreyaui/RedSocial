@@ -11,16 +11,20 @@
   styleClass="reply-dialog"
 >
   <p class="replying-to">
-    Estás respondiendo a <strong>{{ destinatario }}</strong>
+    Estás respondiendo a <strong>{{ post().author | usuarioHandle }}</strong>
   </p>
 
   <form [formGroup]="formulario" (ngSubmit)="responder()" novalidate>
     <div class="composer">
       <div class="avatar">
-        @if (avatarUrl) {
-          <img [src]="avatarUrl" [alt]="'Avatar de ' + usuarioActual()?.name" />
+        @if (avatarUrl && !avatarFallido()) {
+          <img
+            [src]="avatarUrl"
+            [alt]="'Avatar de ' + usuarioActual()?.name"
+            (error)="avatarFallido.set(true)"
+          />
         } @else {
-          <span aria-hidden="true">{{ iniciales }}</span>
+          <span aria-hidden="true">{{ usuarioActual() | inicialesUsuario }}</span>
         }
       </div>
 
@@ -30,7 +34,8 @@
           formControlName="content"
           rows="5"
           maxlength="200"
-          [placeholder]="'Respondé a ' + destinatario"
+          [appAutofocus]="visible()"
+          [placeholder]="'Respondé a ' + (post().author | usuarioHandle)"
           aria-label="Contenido del comentario"
         ></textarea>
 
@@ -45,7 +50,8 @@
         <footer>
           <span
             class="character-count"
-            [class.limit-close]="formulario.controls.content.value.length >= 180"
+            [appLimitCounter]="formulario.controls.content.value"
+            [appLimitCounterMax]="200"
           >
             {{ formulario.controls.content.value.length }}/200
           </span>

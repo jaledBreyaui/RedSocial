@@ -1,0 +1,22 @@
+{
+  "name": "NetSocial",
+  "short_name": "NetSocial",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icono.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "configVersion": 1,
+  "timestamp": 1782828878474,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/chunk-4J3RETCK.js",
+        "/chunk-4JYK2LCD.js",
+        "/chunk-4XCOFQRM.js",
+        "/chunk-5JAVDVUH.js",
+        "/chunk-5TUESR47.js",
+        "/chunk-74FJLGNG.js",
+        "/chunk-AG4ZFVJA.js",
+        "/chunk-D37EVPPN.js",
+        "/chunk-DYSVI5AK.js",
+        "/chunk-F4BMW6SA.js",
+        "/chunk-FMOH65Z7.js",
+        "/chunk-GC3D5DA5.js",
+        "/chunk-GNTUYX7G.js",
+        "/chunk-I7SUX3G4.js",
+        "/chunk-JLN36IIP.js",
+        "/chunk-KXDA6FPI.js",
+        "/chunk-LKYXPXSY.js",
+        "/chunk-LZA64IAF.js",
+        "/chunk-OFFYJGX5.js",
+        "/chunk-OVJMXMGZ.js",
+        "/chunk-P65LOTVX.js",
+        "/chunk-SAGCLRRL.js",
+        "/chunk-TKZUDPTF.js",
+        "/chunk-TQEI2NSM.js",
+        "/chunk-UYNNLJDJ.js",
+        "/chunk-VMO44NMH.js",
+        "/chunk-VNEC4HK2.js",
+        "/chunk-XFWUHJVS.js",
+        "/chunk-XZ7VX5IH.js",
+        "/chunk-YOQ5NHNF.js",
+        "/favicon.svg",
+        "/index.html",
+        "/main-V5OND2MA.js",
+        "/main-XBZNTXAS.js",
+        "/manifest.webmanifest",
+        "/styles-Q3QF3T3T.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/icono.ico",
+        "/media/primeicons-4GST5W3O.woff2",
+        "/media/primeicons-DHQU4SEP.svg",
+        "/media/primeicons-P53SE5CV.woff"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/chunk-4J3RETCK.js": "b2e6204cea47b984bb6c12c703b2c319c63ca302",
+    "/chunk-4JYK2LCD.js": "4dddb48d5f4ba67e43ca7b78c6f18626419030c2",
+    "/chunk-4XCOFQRM.js": "756364f9805245d9f59cb297758bf71e9bea0a99",
+    "/chunk-5JAVDVUH.js": "7d3b141afa4fe0a464c3cf6d69e7063c5f65b7e4",
+    "/chunk-5TUESR47.js": "9787acf9aa174ee1f860c51a6f9bcf9961da5854",
+    "/chunk-74FJLGNG.js": "5c287ed1d402601efc393049f40489bcba030704",
+    "/chunk-AG4ZFVJA.js": "5fb7534f9fc1d2a5686714bc4f87368986421164",
+    "/chunk-D37EVPPN.js": "2f61a8cc7c53307c921959cfb36f010186ea26f3",
+    "/chunk-DYSVI5AK.js": "7e4de49513c4295e62fbeba498602d517bfeb835",
+    "/chunk-F4BMW6SA.js": "a17f0cf168e56072e551a1a8640572aabdc10229",
+    "/chunk-FMOH65Z7.js": "7af4d0ea3e80f0b674e8c9c0aa932c90674606fe",
+    "/chunk-GC3D5DA5.js": "ea3344fe3d6b94f6947169164bc4a2504a3f8cd0",
+    "/chunk-GNTUYX7G.js": "1726252306a0750f36a26bfa32b5b571a23bdad2",
+    "/chunk-I7SUX3G4.js": "2cd1ffe261b06371076840a08efdb09fc5f236e9",
+    "/chunk-JLN36IIP.js": "7835ba3399ade169de0c55cac6b2be0f925c76b7",
+    "/chunk-KXDA6FPI.js": "0e529ae50f2f1aebbc3c848447bf5350286f02db",
+    "/chunk-LKYXPXSY.js": "0b53bbd8a0d87d541a5375b951942a7a62090fb2",
+    "/chunk-LZA64IAF.js": "5beb3749e766460783586378f33cc6d7b60c9db0",
+    "/chunk-OFFYJGX5.js": "120f0e00b3bdb31cf780b2f6727acdc6226ea019",
+    "/chunk-OVJMXMGZ.js": "229077eb1e0cb12d4a0a010da485b58097f11b3d",
+    "/chunk-P65LOTVX.js": "9c5853edad22e09bea8a23e238af7e2a2d461ac2",
+    "/chunk-SAGCLRRL.js": "87d9855e0c16f2b70b638fce3b74c7a831705f5c",
+    "/chunk-TKZUDPTF.js": "adb3973bbb1d6d35c6d33b8b5d1e547100a8bbe0",
+    "/chunk-TQEI2NSM.js": "1a2c63116815dae234d418fc9a328d52e18f98a2",
+    "/chunk-UYNNLJDJ.js": "7011ba8b8f9ddf70a2371fb597b12f03908a1055",
+    "/chunk-VMO44NMH.js": "db09e57e14ce1b299bf2353f20344a5d415a5243",
+    "/chunk-VNEC4HK2.js": "75a667a32aa04f8d27b00ff40545364c9d5e7f1f",
+    "/chunk-XFWUHJVS.js": "7e0157dffaf4645323d1f7fb8a4597ffc41bc8cc",
+    "/chunk-XZ7VX5IH.js": "d3ca29d4f7fed9111f60c5b53b91d9db6b9c5f20",
+    "/chunk-YOQ5NHNF.js": "9af09dc060a34c93fb7982694772bf7d9fa909ce",
+    "/favicon.svg": "a149e2cce2b195c3c848b9ed6e4100359a9e7be8",
+    "/icono.ico": "970ba38225aee5563b0833267bdb2243593e8967",
+    "/index.html": "5d15a27b7eb1cde2356baa195facbcfb1c833d31",
+    "/main-V5OND2MA.js": "8da061701a2d250afd9a63e037e0576aab89e15b",
+    "/main-XBZNTXAS.js": "0c3d02501e4c057df7a0b1b551add9eac4dceb3a",
+    "/manifest.webmanifest": "a5e8f9ef638946a2ffe895e2d761742bccfeb3aa",
+    "/media/primeicons-4GST5W3O.woff2": "837c1279b6af9d297f34fdb43e6fcc9206a79f32",
+    "/media/primeicons-DHQU4SEP.svg": "a07ae39027c1a780b42fd82fad7575c2924d9d28",
+    "/media/primeicons-P53SE5CV.woff": "361e3af71bb4e515feead2f787348a92a5527158",
+    "/styles-Q3QF3T3T.css": "3de4d077961da65ae0697f6d8cfac417179cdcfb"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
